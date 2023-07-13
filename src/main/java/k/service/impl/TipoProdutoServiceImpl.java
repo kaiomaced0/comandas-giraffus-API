@@ -1,44 +1,40 @@
 package k.service.impl;
-
 import java.util.List;
 
-import org.jboss.logging.Logger;
-
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
-import k.model.Caixa;
-import k.repository.CaixaRepository;
-import k.service.CaixaService;
+import k.model.TipoProduto;
+import k.service.TipoProdutoService;
 
-public class CaixaServiceImpl implements CaixaService{
-    
-    public static final Logger LOG = Logger.getLogger(CaixaServiceImpl.class);
-
-    @Inject
-    CaixaRepository repository;
+public class TipoProdutoServiceImpl implements TipoProdutoService {
 
     @Override
-    public List<Caixa> getAll() {
+    public List<TipoProduto> getAll() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAll'");
     }
 
     @Override
-    public List<Caixa> getNome() {
+    public List<TipoProduto> getNome() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getNome'");
     }
 
     @Override
-    public List<Caixa> getId() {
+    public List<TipoProduto> getId() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getId'");
     }
 
     @Override
-    public Response insert(Caixa caixa) {
+    public Response insert(TipoProduto tipoProduto) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'insert'");
+    }
+
+    @Override
+    public Response update(Long idTipoProduto, TipoProduto tipoProduto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
@@ -46,12 +42,5 @@ public class CaixaServiceImpl implements CaixaService{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
-
-    @Override
-    public Response fechar(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'fechar'");
-    }
-
     
 }

@@ -20,6 +20,16 @@ public class Caixa extends EntityClass{
 
     private LocalDate dataCaixa;
 
+    private String comentario;
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
     public List<Comanda> getComandas() {
         return comandas;
     }

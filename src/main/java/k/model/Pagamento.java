@@ -12,6 +12,9 @@ public class Pagamento extends EntityClass{
 
     private Boolean pagamentoRealizado;
 
+    @JoinColumn(name = "forma_pagamento")
+    private FormaPagamento formaPagamento;
+
     @ManyToOne
     @JoinColumn(name = "usuario_caixa_pagamento")
     private Usuario caixa;

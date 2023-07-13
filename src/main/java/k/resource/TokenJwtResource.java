@@ -32,7 +32,7 @@ public class TokenJwtResource{
 
             LOG.info("Requisição TokenJwt.generateJwt()");
 
-            return Jwt.issuer("unitins-jwt")
+            return Jwt.issuer("kaioprojects-jwt")
                     .subject(usuario.getLogin())
                     .groups(roles)
                     .expiresAt(expiryDate)

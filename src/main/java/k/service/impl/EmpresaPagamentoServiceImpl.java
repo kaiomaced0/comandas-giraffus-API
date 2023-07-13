@@ -1,42 +1,32 @@
 package k.service.impl;
-
 import java.util.List;
 
-import org.jboss.logging.Logger;
-
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
-import k.model.Caixa;
-import k.repository.CaixaRepository;
-import k.service.CaixaService;
+import k.model.EmpresaPagamento;
+import k.service.EmpresaPagamentoService;
 
-public class CaixaServiceImpl implements CaixaService{
-    
-    public static final Logger LOG = Logger.getLogger(CaixaServiceImpl.class);
-
-    @Inject
-    CaixaRepository repository;
+public class EmpresaPagamentoServiceImpl implements EmpresaPagamentoService {
 
     @Override
-    public List<Caixa> getAll() {
+    public List<EmpresaPagamento> getAll() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAll'");
     }
 
     @Override
-    public List<Caixa> getNome() {
+    public List<EmpresaPagamento> getCnpj(String cnpjEmpresa) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getNome'");
+        throw new UnsupportedOperationException("Unimplemented method 'getCnpj'");
     }
 
     @Override
-    public List<Caixa> getId() {
+    public List<EmpresaPagamento> getId() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getId'");
     }
 
     @Override
-    public Response insert(Caixa caixa) {
+    public Response insert(EmpresaPagamento empresaPagamento) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'insert'");
     }
@@ -46,12 +36,5 @@ public class CaixaServiceImpl implements CaixaService{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
-
-    @Override
-    public Response fechar(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'fechar'");
-    }
-
     
 }

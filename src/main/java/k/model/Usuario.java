@@ -10,16 +10,22 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario extends EntityClass {
 
+    @Size(min = 3, max = 30)
     private String nome;
 
+    @Size(min = 5, max = 20)
     private String login;
 
     private String senha;
+
+    @Size(min = 11, max = 11)
+    private String cpf;
 
     @ManyToOne
     @JoinColumn(name = "empresa_usuario")

@@ -2,7 +2,6 @@ package k.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import k.model.Perfil;
 import k.model.StatusPedido;
 
 @Converter(autoApply = true)

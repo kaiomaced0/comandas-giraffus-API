@@ -47,6 +47,16 @@ public class Empresa extends EntityClass{
     @JoinColumn(name = "lista_funcionario_empresa")
     private List<Usuario> funcionarios;
 
+    private String comentario;
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
     public String getNome() {
         return nome;
     }

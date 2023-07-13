@@ -1,44 +1,40 @@
 package k.service.impl;
-
 import java.util.List;
 
-import org.jboss.logging.Logger;
-
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
-import k.model.Caixa;
-import k.repository.CaixaRepository;
-import k.service.CaixaService;
+import k.model.Produto;
+import k.service.ProdutoService;
 
-public class CaixaServiceImpl implements CaixaService{
-    
-    public static final Logger LOG = Logger.getLogger(CaixaServiceImpl.class);
-
-    @Inject
-    CaixaRepository repository;
+public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
-    public List<Caixa> getAll() {
+    public List<Produto> getAll() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAll'");
     }
 
     @Override
-    public List<Caixa> getNome() {
+    public List<Produto> getNome() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getNome'");
     }
 
     @Override
-    public List<Caixa> getId() {
+    public List<Produto> getId() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getId'");
     }
 
     @Override
-    public Response insert(Caixa caixa) {
+    public Response insert(Produto produto) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'insert'");
+    }
+
+    @Override
+    public Response update(Long idProduto, Produto produto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
@@ -48,10 +44,15 @@ public class CaixaServiceImpl implements CaixaService{
     }
 
     @Override
-    public Response fechar(Long id) {
+    public Response retiraEstoque(Long id, int quantidade) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'fechar'");
+        throw new UnsupportedOperationException("Unimplemented method 'retiraEstoque'");
     }
 
+    @Override
+    public Response adicionaEstoque(Long id, int quantidade) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'adicionaEstoque'");
+    }
     
 }
