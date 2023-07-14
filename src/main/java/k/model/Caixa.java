@@ -12,15 +12,38 @@ public class Caixa extends EntityClass{
     @OneToMany
     @JoinColumn(name = "comanda_caixa")
     private List<Comanda> comandas;
+
     @OneToMany
     @JoinColumn(name = "pagamento_caixa")
     private List<Pagamento> pagamentos;
+
+    @ManyToOne
+    @JoinColumn(name = "empresa_caixa")
+    private Empresa empresa;
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
 
     private Double valorTotal;
 
     private LocalDate dataCaixa;
 
     private String comentario;
+
+    private Boolean fechado;
+
+    public Boolean getFechado() {
+        return fechado;
+    }
+
+    public void setFechado(Boolean fechado) {
+        this.fechado = fechado;
+    }
 
     public String getComentario() {
         return comentario;

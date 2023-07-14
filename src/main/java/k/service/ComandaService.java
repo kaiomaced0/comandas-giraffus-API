@@ -9,6 +9,10 @@ import k.model.Comanda;
 public interface ComandaService {
     public List<Comanda> getAll();
 
+    public List<Comanda> getEmAberto();
+
+    public List<Comanda> getMyComandas();
+
     public List<Comanda> getNome(@PathParam("nome") String nome);
 
     public Comanda getId(@PathParam("id") Long id);

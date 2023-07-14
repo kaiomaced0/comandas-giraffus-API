@@ -9,9 +9,7 @@ import k.model.Caixa;
 public interface CaixaService {
     public List<Caixa> getAll();
 
-    public List<Caixa> getNome();
-
-    public List<Caixa> getId();
+    public Caixa getId(@PathParam("id") Long id);
 
     public Response insert(Caixa caixa);
 

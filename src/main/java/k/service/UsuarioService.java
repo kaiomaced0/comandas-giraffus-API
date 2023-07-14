@@ -10,7 +10,9 @@ public interface UsuarioService {
 
     public List<Usuario> getAll();
 
-    public List<Usuario> getNome();
+    public List<Usuario> getFuncionarios();
+
+    public List<Usuario> getNome(String nome);
     
     public Usuario findByLoginAndSenha(String login, String senha);
 
