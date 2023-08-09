@@ -1,21 +1,21 @@
-// package k.dto;
+package k.dto;
 
-// import java.util.List;
-// import java.util.stream.Collectors;
+import java.util.List;
+import java.util.stream.Collectors;
 
-// import k.model.Comanda;
-// import k.model.Pedido;
+import k.model.Comanda;
 
-// public record ComandaResponseDTO(
-//         String nome,
-//         List<Pedido> pedidos,
-//         Double preco) {
+public record ComandaResponseDTO(
+        String nome,
+        List<Long> idPedidos,
+        Double preco,
+        Long idAtendente,
+        Boolean finalizada) {
 
-//     public ComandaResponseDTO(Comanda comanda){
-//         //comanda.getProdutos().stream().map(
-//         //        itemCompra -> new ItemCompraDTO(itemCompra.getProduto().getId(), itemCompra.getQuantidade()))
-//         this(comanda.getNome(), comanda.getPedidos(),
-//         comanda.getPreco());
-//     }
+    public ComandaResponseDTO(Comanda comanda) {
+        this(comanda.getNome(),
+                comanda.getPedidos().stream().map(pedido -> pedido.getId()).collect(Collectors.toList()),
+                comanda.getPreco(), comanda.getAtendente().getId(), comanda.getFinalizada());
+    }
 
-// }
+}

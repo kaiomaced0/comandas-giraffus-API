@@ -1,8 +1,8 @@
-// package k.dto;
+package k.dto;
 
-// public record AuthUsuarioDTO (
-//     String login,
-//     String senha
+public record AuthUsuarioDTO (
+    String login,
+    String senha
 
-// )
-//  {}
+)
+ {}
