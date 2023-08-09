@@ -4,20 +4,19 @@ import java.util.List;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import k.model.Pedido;
+import k.dto.PedidoDTO;
+import k.dto.PedidoResponseDTO;
 
 public interface PedidoService {
-    public List<Pedido> getAll();
+    public List<PedidoResponseDTO> getAll();
 
-    public List<Pedido> getId();
+    public PedidoResponseDTO getId(Long id);
 
-    public Response insert(Pedido pedido);
-
-    public Response update(@PathParam("idPedido") Long idPedido, Pedido pedido);
+    public Response insert(PedidoDTO pedido);
 
     public Response delete(@PathParam("id") Long id);
 
-    public Response removeItemCompra(@PathParam("id") Long id, int quantidade);
-    
-    public Response adicionaItemCompra(@PathParam("id") Long id, int quantidade);
+    public Response removeItemCompra(Long id, Long idItemCompra);
+
+    public Response adicionaItemCompra(Long idPedido, Long idItemCompra);
 }

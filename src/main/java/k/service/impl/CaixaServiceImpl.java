@@ -1,6 +1,6 @@
 package k.service.impl;
 
-import java.util.Comparator;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +10,8 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import k.dto.CaixaDTO;
+import k.dto.CaixaResponseDTO;
 import k.model.Caixa;
 import k.repository.CaixaRepository;
 import k.service.CaixaService;
@@ -26,34 +28,33 @@ public class CaixaServiceImpl implements CaixaService {
     UsuarioLogadoService usuarioLogadoService;
 
     @Override
-    public List<Caixa> getAll() {
+    public List<CaixaResponseDTO> getAll() {
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getAdmin().getId() == 
-            usuarioLogadoService.getPerfilUsuarioLogado().getId()){
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getAdmin().getId() == usuarioLogadoService
+                    .getPerfilUsuarioLogado().getId()) {
                 LOG.info("Requisição Caixa.getAll()");
-                return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas();
-            }
-            else{
-                
+                return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas().stream()
+                        .map(caixas -> new CaixaResponseDTO(caixas)).collect(Collectors.toList());
+            } else {
+
                 throw new NotFoundException("Sem acesso");
             }
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Caixa.getAll()");
             return null;
         }
-        
+
     }
 
     @Override
-    public Caixa getId(Long id) {
+    public CaixaResponseDTO getId(Long id) {
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId()== 
-            repository.findById(id).getEmpresa().getId()){
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId() == repository.findById(id)
+                    .getEmpresa().getId()) {
                 LOG.info("Requisição Caixa.getId()");
-                return repository.findById(id);
-            }
-            else{
-                
+                return new CaixaResponseDTO(repository.findById(id));
+            } else {
+
                 throw new NotFoundException("Sem acesso");
             }
         } catch (Exception e) {
@@ -63,12 +64,20 @@ public class CaixaServiceImpl implements CaixaService {
     }
 
     @Override
-    public Response insert(Caixa caixa) {
+    public Response insert(CaixaDTO caixaDTO) {
         try {
 
             LOG.info("Requisição Caixa.insert()");
+            Caixa caixa = new Caixa();
+            caixa = CaixaDTO.criaCaixa(caixaDTO);
+            caixa.setEmpresa(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa());
+            caixa.setDataInclusao(LocalDateTime.now());
+            caixa.setFechado(false);
+            caixa.setValorTotal(0.0);
+            repository.persist(caixa);
+
             return Response.status(Status.OK).build();
-            
+
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Caixa.insert()");
             return Response.status(Status.NO_CONTENT).build();
@@ -78,14 +87,13 @@ public class CaixaServiceImpl implements CaixaService {
     @Override
     public Response delete(Long id) {
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId()== 
-            repository.findById(id).getEmpresa().getId()){
-            Caixa entity = repository.findById(id);
-            entity.setAtivo(false);
-            LOG.info("Requisição Caixa.delete()");
-            return Response.status(Status.OK).build();
-            }
-            else{
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId() == repository.findById(id)
+                    .getEmpresa().getId()) {
+                Caixa entity = repository.findById(id);
+                entity.setAtivo(false);
+                LOG.info("Requisição Caixa.delete()");
+                return Response.status(Status.OK).build();
+            } else {
                 throw new NotFoundException("Sem acesso");
             }
         } catch (Exception e) {
@@ -97,14 +105,13 @@ public class CaixaServiceImpl implements CaixaService {
     @Override
     public Response fechar(Long id) {
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId()== 
-            repository.findById(id).getEmpresa().getId()){
-            Caixa entity = repository.findById(id);
-            entity.setFechado(true);
-            LOG.info("Requisição Caixa.fechar()");
-            return Response.status(Status.OK).build();
-            }
-            else{
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId() == repository.findById(id)
+                    .getEmpresa().getId()) {
+                Caixa entity = repository.findById(id);
+                entity.setFechado(true);
+                LOG.info("Requisição Caixa.fechar()");
+                return Response.status(Status.OK).build();
+            } else {
                 throw new NotFoundException("Sem acesso");
             }
         } catch (Exception e) {

@@ -7,7 +7,10 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Caixa extends EntityClass{
+public class Caixa extends EntityClass {
+
+    @Column(name = "nome_caixa")
+    private String nome;
 
     @OneToMany
     @JoinColumn(name = "comanda_caixa")
@@ -21,14 +24,6 @@ public class Caixa extends EntityClass{
     @JoinColumn(name = "empresa_caixa")
     private Empresa empresa;
 
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
-
     private Double valorTotal;
 
     private LocalDate dataCaixa;
@@ -36,6 +31,14 @@ public class Caixa extends EntityClass{
     private String comentario;
 
     private Boolean fechado;
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
 
     public Boolean getFechado() {
         return fechado;
@@ -83,5 +86,13 @@ public class Caixa extends EntityClass{
 
     public void setDataCaixa(LocalDate dataCaixa) {
         this.dataCaixa = dataCaixa;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }

@@ -1,71 +1,98 @@
 package k.service.impl;
-import java.util.List;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
+import k.dto.EmpresaDTO;
+import k.dto.EmpresaResponseDTO;
+import k.dto.EmpresaUpdateNomeDTO;
 import k.model.Empresa;
-import k.model.Usuario;
+import k.repository.EmpresaRepository;
+import k.repository.UsuarioRepository;
 import k.service.EmpresaService;
+import k.service.UsuarioLogadoService;
 
 public class EmpresaServiceImpl implements EmpresaService {
 
+    @Inject
+    EmpresaRepository repository;
+
+    @Inject
+    UsuarioLogadoService usuarioLogadoService;
+
+    @Inject
+    UsuarioRepository usuarioRepository;
+
     @Override
-    public List<Empresa> getAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    public List<EmpresaResponseDTO> getAll() {
+        return repository.findAll().stream().map(empresa -> new EmpresaResponseDTO(empresa))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Empresa> getNome() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getNome'");
+    public List<EmpresaResponseDTO> getNome(String nome) {
+        return repository.findByNome(nome).stream().map(empresa -> new EmpresaResponseDTO(empresa))
+                .collect(Collectors.toList());
+
     }
 
     @Override
-    public List<Empresa> getCnpj() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCnpj'");
+    public EmpresaResponseDTO getCnpj(String cnpj) {
+        return new EmpresaResponseDTO(repository.findByCnpj(cnpj));
     }
 
     @Override
-    public List<Empresa> getId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getId'");
+    public EmpresaResponseDTO getId(Long id) {
+        return new EmpresaResponseDTO(repository.findById(id));
     }
 
     @Override
-    public Response insert(Empresa empresa) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
+    public Response insert(EmpresaDTO empresa) {
+        Empresa entity = new Empresa();
+        entity.setNome(empresa.nome());
+        entity.setAdmin(usuarioRepository.findById(empresa.usuarioId()));
+        entity.setNomeFantasia(empresa.nomeFantasia());
+        entity.setCnpj(empresa.cnpj());
+        entity.setComentario(empresa.comentario());
+        return Response.ok(new EmpresaResponseDTO(entity)).build();
     }
 
     @Override
-    public Response updateNome(Long idEmpresa, String nome) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateNome'");
+    public Response updateNome(EmpresaUpdateNomeDTO empresaUpdateNomeDTO) {
+        Empresa entity = repository.findById(empresaUpdateNomeDTO.idEmpresa());
+        entity.setNome(empresaUpdateNomeDTO.nome());
+        return Response.ok(new EmpresaResponseDTO(entity)).build();
     }
 
     @Override
-    public Response update(Long idEmpresa) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public Response adicionarFuncionario(Long id) {
+        usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getFuncionarios()
+                .add(usuarioRepository.findById(id));
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response removerFuncionario(Long id) {
+        usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getFuncionarios()
+                .remove(usuarioRepository.findById(id));
+        return Response.ok().build();
+
     }
 
     @Override
     public Response inativar(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'inativar'");
+        Empresa entity = repository.findById(id);
+        entity.setAtivo(false);
+        return Response.ok().build();
     }
 
     @Override
     public Response ativar(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'ativar'");
+        Empresa entity = repository.findById(id);
+        entity.setAtivo(true);
+        return Response.ok().build();
     }
 
-    @Override
-    public Response updateAdmin(Long idEmpresa, Usuario novoAdmin) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateAdmin'");
-    }
-    
 }

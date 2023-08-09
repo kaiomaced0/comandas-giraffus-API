@@ -4,27 +4,28 @@ import java.util.List;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import k.model.Empresa;
-import k.model.Usuario;
+import k.dto.EmpresaDTO;
+import k.dto.EmpresaResponseDTO;
+import k.dto.EmpresaUpdateNomeDTO;
 
 public interface EmpresaService {
-    public List<Empresa> getAll();
+    public List<EmpresaResponseDTO> getAll();
 
-    public List<Empresa> getNome();
+    public List<EmpresaResponseDTO> getNome(String nome);
 
-    public List<Empresa> getCnpj();
+    public EmpresaResponseDTO getCnpj(String cnpj);
 
-    public List<Empresa> getId();
+    public EmpresaResponseDTO getId(Long id);
 
-    public Response insert(Empresa empresa);
+    public Response insert(EmpresaDTO empresa);
 
-    public Response updateNome(@PathParam("idEmpresa") Long idEmpresa, String nome);
-    
-    public Response update(@PathParam("idEmpresa") Long idEmpresa);
+    public Response updateNome(EmpresaUpdateNomeDTO empresaUpdateNomeDTO);
+
+    public Response adicionarFuncionario(Long id);
+
+    public Response removerFuncionario(Long id);
 
     public Response inativar(@PathParam("id") Long id);
 
     public Response ativar(@PathParam("id") Long id);
-
-    public Response updateAdmin(@PathParam("idEmpresa") Long idEmpresa, Usuario novoAdmin);
 }

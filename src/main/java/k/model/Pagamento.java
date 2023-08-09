@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Pagamento extends EntityClass{
+public class Pagamento extends EntityClass {
 
     @OneToOne
     @JoinColumn(name = "comanda_pagamento")
@@ -17,7 +17,7 @@ public class Pagamento extends EntityClass{
 
     @ManyToOne
     @JoinColumn(name = "usuario_caixa_pagamento")
-    private Usuario caixa;
+    private Usuario usuarioCaixa;
 
     private Double valorPagamento;
 
@@ -27,6 +27,14 @@ public class Pagamento extends EntityClass{
 
     public void setComanda(Comanda comanda) {
         this.comanda = comanda;
+    }
+
+    public FormaPagamento getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(FormaPagamento formaPagamento) {
+        this.formaPagamento = formaPagamento;
     }
 
     public Boolean getPagamentoRealizado() {
@@ -43,5 +51,13 @@ public class Pagamento extends EntityClass{
 
     public void setValorPagamento(Double valorPagamento) {
         this.valorPagamento = valorPagamento;
+    }
+
+    public Usuario getUsuarioCaixa() {
+        return usuarioCaixa;
+    }
+
+    public void setUsuarioCaixa(Usuario usuarioCaixa) {
+        this.usuarioCaixa = usuarioCaixa;
     }
 }

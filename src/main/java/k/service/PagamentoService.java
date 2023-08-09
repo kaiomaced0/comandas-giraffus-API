@@ -4,16 +4,15 @@ import java.util.List;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import k.model.Pagamento;
+import k.dto.PagamentoDTO;
+import k.dto.PagamentoResponseDTO;
 
 public interface PagamentoService {
-    public List<Pagamento> getAll();
+    public List<PagamentoResponseDTO> getAll();
 
-    public List<Pagamento> getNome();
+    public PagamentoResponseDTO getId(Long id);
 
-    public List<Pagamento> getId();
-
-    public Response insert(Pagamento pagamento);
+    public Response insert(PagamentoDTO pagamento);
 
     public Response delete(@PathParam("id") Long id, String observacao);
 

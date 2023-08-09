@@ -4,20 +4,21 @@ import java.util.List;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import k.model.Comanda;
+import k.dto.ComandaDTO;
+import k.dto.ComandaResponseDTO;
 
 public interface ComandaService {
-    public List<Comanda> getAll();
+    public List<ComandaResponseDTO> getAll();
 
-    public List<Comanda> getEmAberto();
+    public List<ComandaResponseDTO> getEmAberto();
 
-    public List<Comanda> getMyComandas();
+    public List<ComandaResponseDTO> getAllComandasAdm(Long idEmpresa);
 
-    public List<Comanda> getNome(@PathParam("nome") String nome);
+    public ComandaResponseDTO getNome(@PathParam("nome") String nome);
 
-    public Comanda getId(@PathParam("id") Long id);
+    public ComandaResponseDTO getId(@PathParam("id") Long id);
 
-    public Response insert(Comanda comanda);
+    public Response insert(ComandaDTO comanda);
 
     public Response pagar(@PathParam("id") Long id, Long idPagamento);
 

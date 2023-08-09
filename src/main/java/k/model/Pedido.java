@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Pedido extends EntityClass{
+public class Pedido extends EntityClass {
 
     @OneToMany
     @JoinColumn(name = "lista_itemcompra_pedido")
@@ -17,11 +17,8 @@ public class Pedido extends EntityClass{
     @Column(name = "status_pedido")
     private StatusPedido statusPedido;
 
-    private Double valor;
-
     private Integer quantidadePessoas;
 
-    
     public List<ItemCompra> getItemCompras() {
         return itemCompras;
     }
@@ -44,14 +41,6 @@ public class Pedido extends EntityClass{
 
     public void setStatusPedido(StatusPedido statusPedido) {
         this.statusPedido = statusPedido;
-    }
-
-    public Double getValor() {
-        return valor;
-    }
-
-    public void setValor(Double valor) {
-        this.valor = valor;
     }
 
     public Integer getQuantidadePessoas() {

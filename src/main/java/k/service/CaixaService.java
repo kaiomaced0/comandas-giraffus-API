@@ -4,14 +4,15 @@ import java.util.List;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import k.model.Caixa;
+import k.dto.CaixaDTO;
+import k.dto.CaixaResponseDTO;
 
 public interface CaixaService {
-    public List<Caixa> getAll();
+    public List<CaixaResponseDTO> getAll();
 
-    public Caixa getId(@PathParam("id") Long id);
+    public CaixaResponseDTO getId(@PathParam("id") Long id);
 
-    public Response insert(Caixa caixa);
+    public Response insert(CaixaDTO caixa);
 
     public Response delete(@PathParam("id") Long id);
 
