@@ -16,7 +16,9 @@ import k.model.Caixa;
 import k.repository.CaixaRepository;
 import k.service.CaixaService;
 import k.service.UsuarioLogadoService;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class CaixaServiceImpl implements CaixaService {
 
     public static final Logger LOG = Logger.getLogger(CaixaServiceImpl.class);
@@ -30,16 +32,14 @@ public class CaixaServiceImpl implements CaixaService {
     @Override
     public List<CaixaResponseDTO> getAll() {
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getAdmin().getId() == usuarioLogadoService
-                    .getPerfilUsuarioLogado().getId()) {
-                LOG.info("Requisição Caixa.getAll()");
-                return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas().stream()
-                        .map(caixas -> new CaixaResponseDTO(caixas)).collect(Collectors.toList());
-            } else {
+            LOG.info("Requisição Caixa.getAll()");
+            return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas().stream()
+                    .filter(caixa -> caixa.getAtivo() == true)
+                    .map(caixas -> new CaixaResponseDTO(caixas)).collect(Collectors.toList());
 
-                throw new NotFoundException("Sem acesso");
-            }
-        } catch (Exception e) {
+        } catch (
+
+        Exception e) {
             LOG.error("Erro ao rodar Requisição Caixa.getAll()");
             return null;
         }

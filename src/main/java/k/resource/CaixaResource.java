@@ -2,7 +2,9 @@ package k.resource;
 
 import java.util.List;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -25,29 +27,37 @@ public class CaixaResource {
     CaixaService service;
 
     @GET
+    @RolesAllowed({ "Admin", "Caixa" })
     public List<CaixaResponseDTO> getAll() {
         return service.getAll();
     }
 
     @GET
+    @RolesAllowed({ "Admin", "Caixa" })
     @Path("/{id}")
     public CaixaResponseDTO getId(@PathParam("id") Long id) {
         return service.getId(id);
     }
 
     @POST
+    @RolesAllowed({ "Admin", "Caixa" })
+    @Transactional
     public Response insert(CaixaDTO caixa) {
         return service.insert(caixa);
     }
 
     @PATCH
+    @RolesAllowed({ "Admin", "Caixa" })
     @Path("/delete/{id}")
+    @Transactional
     public Response delete(@PathParam("id") Long id) {
         return service.delete(id);
     }
 
     @PATCH
+    @RolesAllowed({ "Admin", "Caixa" })
     @Path("/fechar/{id}")
+    @Transactional
     public Response fechar(@PathParam("id") Long id) {
         return service.fechar(id);
     }

@@ -2,7 +2,9 @@ package k.resource;
 
 import java.util.List;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -25,35 +27,43 @@ public class ComandaResource {
     ComandaService service;
 
     @GET
+    @RolesAllowed({ "Admin", "Caixa", "Garcom", "Cozinha" })
     public List<ComandaResponseDTO> getAll() {
         return service.getAll();
     }
 
     @GET
     @Path("/aberto")
+    @RolesAllowed({ "Admin", "Caixa", "Garcom", "Cozinha" })
     public List<ComandaResponseDTO> getEmAberto() {
         return service.getEmAberto();
     }
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Admin", "Caixa", "Garcom", "Cozinha" })
     public ComandaResponseDTO getId(@PathParam("id") Long id) {
         return service.getId(id);
     }
 
     @GET
     @Path("/nome/{nome}")
+    @RolesAllowed({ "Admin", "Caixa", "Garcom", "Cozinha" })
     public ComandaResponseDTO getNome(@PathParam("nome") String nome) {
         return service.getNome(nome);
     }
 
     @POST
+    @Transactional
+    @RolesAllowed({ "Admin", "Caixa", "Garcom" })
     public Response insert(ComandaDTO Comanda) {
         return service.insert(Comanda);
     }
 
     @PATCH
     @Path("/delete/{id}")
+    @Transactional
+    @RolesAllowed({ "Admin", "Caixa", "Garcom" })
     public Response delete(@PathParam("id") Long id) {
         return service.delete(id);
     }

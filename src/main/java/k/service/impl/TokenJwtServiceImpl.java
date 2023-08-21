@@ -1,4 +1,5 @@
 package k.service.impl;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Set;
@@ -10,11 +11,13 @@ import io.smallrye.jwt.build.Jwt;
 import k.model.Usuario;
 import k.service.TokenJwtService;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class TokenJwtServiceImpl implements TokenJwtService {
     private static final Duration EXPIRATION_TIME = Duration.ofHours(24);
 
     public static final Logger LOG = Logger.getLogger(TokenJwtServiceImpl.class);
-
 
     public String generateJwt(Usuario usuario) {
 

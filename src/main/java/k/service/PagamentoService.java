@@ -2,9 +2,9 @@ package k.service;
 
 import java.util.List;
 
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 import k.dto.PagamentoDTO;
+import k.dto.PagamentoDeleteDTO;
 import k.dto.PagamentoResponseDTO;
 
 public interface PagamentoService {
@@ -14,6 +14,6 @@ public interface PagamentoService {
 
     public Response insert(PagamentoDTO pagamento);
 
-    public Response delete(@PathParam("id") Long id, String observacao);
+    public Response delete(PagamentoDeleteDTO pagamentoDeleteDTO);
 
 }

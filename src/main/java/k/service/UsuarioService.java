@@ -4,25 +4,30 @@ import java.util.List;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
+import k.dto.UsuarioDTO;
+import k.dto.UsuarioResponseDTO;
+import k.dto.UsuarioUpdateNomeGerenteDTO;
+import k.dto.UsuarioUpdateSenhaGerenteDTO;
 import k.model.Usuario;
 
 public interface UsuarioService {
 
-    public List<Usuario> getAll();
+    public List<UsuarioResponseDTO> getAll();
 
-    public List<Usuario> getFuncionarios();
+    public List<UsuarioResponseDTO> getFuncionarios();
 
-    public List<Usuario> getNome(String nome);
-    
+    public List<UsuarioResponseDTO> getNome(String nome);
+
     public Usuario findByLoginAndSenha(String login, String senha);
 
-    public Usuario findByLogin(String login);
+    public UsuarioResponseDTO getId(Long id);
 
-    public List<Usuario> getId();
+    public Response insert(UsuarioDTO usuario);
 
-    public Response insert(Usuario usuario);
+    public Response updateNomeGerente(UsuarioUpdateNomeGerenteDTO usuarioUpdateNome);
 
-    public Response update(@PathParam("idUsuario") Long idUsuario, Usuario usuario);
+    public Response updateSenhaGerente(UsuarioUpdateSenhaGerenteDTO usuarioUpdateSenhaGerente);
+
 
     public Response delete(@PathParam("id") Long id);
 }

@@ -6,16 +6,23 @@ import java.util.stream.Collectors;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Status;
 import jakarta.ws.rs.core.Response;
 import k.dto.ComandaDTO;
+import k.dto.ComandaPagarDTO;
 import k.dto.ComandaResponseDTO;
 import k.model.Comanda;
+import k.model.ItemCompra;
+import k.model.Pedido;
 import k.repository.ComandaRepository;
 import k.repository.EmpresaRepository;
 import k.repository.PagamentoRepository;
 import k.service.ComandaService;
 import k.service.UsuarioLogadoService;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class ComandaServiceImpl implements ComandaService {
 
     public static final Logger LOG = Logger.getLogger(ComandaServiceImpl.class);
@@ -48,28 +55,66 @@ public class ComandaServiceImpl implements ComandaService {
 
     @Override
     public ComandaResponseDTO getNome(String nome) {
-        return new ComandaResponseDTO(repository.findByNome(nome));
+        try {
+            return new ComandaResponseDTO(repository.findByNome(nome));
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public ComandaResponseDTO getId(Long id) {
-        return new ComandaResponseDTO(repository.findById(id));
+        try {
+            return new ComandaResponseDTO(repository.findById(id));
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Response insert(ComandaDTO comanda) {
-        Comanda entity = ComandaDTO.criaComanda(comanda);
-        entity.setAtendente(usuarioLogadoService.getPerfilUsuarioLogado());
-        return Response.ok().build();
+        try {
+            Comanda entity = ComandaDTO.criaComanda(comanda);
+            entity.setAtendente(usuarioLogadoService.getPerfilUsuarioLogado());
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+        }
 
     }
 
     @Override
-    public Response pagar(Long id, Long idPagamento) {
-        Comanda entity = repository.findById(id);
-        entity.setFinalizada(true);
-        entity.setPagamento(pagamentoRepository.findById(idPagamento));
-        return Response.ok().build();
+    public Response updatePreco(Long id) {
+        try {
+
+            Comanda comanda = repository.findById(id);
+            comanda.setPreco(0.0);
+            for (Pedido p : comanda.getPedidos()) {
+                if (p.getAtivo() == true) {
+                    for (ItemCompra i : p.getItemCompras()) {
+                        comanda.setPreco(comanda.getPreco() + i.getPreco());
+                    }
+                }
+            }
+            return Response.ok(new ComandaResponseDTO(comanda)).build();
+
+        } catch (Exception e) {
+            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+        }
+    }
+
+    @Override
+    public Response pagar(ComandaPagarDTO comandaPagarDTO) {
+        try {
+            Comanda entity = repository.findById(comandaPagarDTO.id());
+            entity.setFinalizada(true);
+            entity.setPagamento(pagamentoRepository.findById(comandaPagarDTO.idPagamento()));
+            return Response.ok().build();
+
+        } catch (Exception e) {
+            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+        }
     }
 
     @Override

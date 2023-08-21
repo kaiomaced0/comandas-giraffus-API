@@ -7,22 +7,24 @@ import java.util.Base64;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import k.model.Perfil;
 import k.resource.HashResource;
 import k.service.HashService;
 
-public class HashServiceImpl implements HashService{
-    
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class HashServiceImpl implements HashService {
+
     private String salt = "#blahhxyz9232";
     private Integer iterationCount = 223;
     private Integer keylength = 512;
 
-    
     public String getHashSenha(String senha) {
         try {
             byte[] result = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512")
                     .generateSecret(
-                            new PBEKeySpec(senha.toCharArray(), salt.getBytes(), iterationCount, keylength)
-                        )
+                            new PBEKeySpec(senha.toCharArray(), salt.getBytes(), iterationCount, keylength))
                     .getEncoded();
             return Base64.getEncoder().encodeToString(result);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -31,8 +33,6 @@ public class HashServiceImpl implements HashService{
     }
 
     public static void main(String[] args) {
-        HashResource service = new HashResource();
-        System.out.println();
-        System.out.println(service.getHashSenha("123"));
+        System.out.println(Perfil.valueOf(0).getLabel());
     }
 }

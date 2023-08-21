@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 import k.dto.ComandaDTO;
+import k.dto.ComandaPagarDTO;
 import k.dto.ComandaResponseDTO;
 
 public interface ComandaService {
@@ -20,8 +21,10 @@ public interface ComandaService {
 
     public Response insert(ComandaDTO comanda);
 
-    public Response pagar(@PathParam("id") Long id, Long idPagamento);
+    public Response pagar(ComandaPagarDTO comandaPagarDTO);
 
     public Response delete(@PathParam("id") Long id);
+
+    public Response updatePreco(Long id);
 
 }

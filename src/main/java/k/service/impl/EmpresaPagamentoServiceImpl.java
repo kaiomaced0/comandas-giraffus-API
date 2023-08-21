@@ -12,6 +12,9 @@ import k.repository.EmpresaPagamentoRepository;
 import k.repository.EmpresaRepository;
 import k.service.EmpresaPagamentoService;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class EmpresaPagamentoServiceImpl implements EmpresaPagamentoService {
 
     @Inject

@@ -1,46 +1,87 @@
 package k.service.impl;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
+import jakarta.inject.Inject;
+import jakarta.transaction.Status;
 import jakarta.ws.rs.core.Response;
+import k.dto.TipoProdutoDTO;
+import k.dto.TipoProdutoResponseDTO;
 import k.model.TipoProduto;
+import k.repository.EmpresaRepository;
+import k.repository.TipoProdutoRepository;
 import k.service.TipoProdutoService;
+import k.service.UsuarioLogadoService;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class TipoProdutoServiceImpl implements TipoProdutoService {
 
+    @Inject
+    TipoProdutoRepository repository;
+
+    @Inject
+    EmpresaRepository empresaRepository;
+
+    @Inject
+    UsuarioLogadoService usuarioLogadoService;
+
     @Override
-    public List<TipoProduto> getAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    public List<TipoProdutoResponseDTO> getAll() {
+        return empresaRepository.findById(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId())
+                .getTipoProdutos().stream()
+                .filter(tipoProduto -> tipoProduto.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado()
+                        .getEmpresa())
+                .map(tipoProduto -> new TipoProdutoResponseDTO(tipoProduto.getId(), tipoProduto.getNome()))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<TipoProduto> getNome() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getNome'");
+    public List<TipoProdutoResponseDTO> getNome(String nome) {
+        return repository.findByNome(nome).stream().filter(
+                tipoProduto -> tipoProduto.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa())
+                .map(tipoProduto -> new TipoProdutoResponseDTO(tipoProduto.getId(), tipoProduto.getNome()))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<TipoProduto> getId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getId'");
+    public TipoProdutoResponseDTO getId(Long id) {
+        TipoProduto entity = repository.findById(id);
+        return new TipoProdutoResponseDTO(entity.getId(), entity.getNome());
     }
 
     @Override
-    public Response insert(TipoProduto tipoProduto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
+    public Response insert(TipoProdutoDTO tipoProduto) {
+        TipoProduto entity = TipoProdutoDTO.criaTipoProduto(tipoProduto);
+        entity.setEmpresa(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa());
+        repository.persist(entity);
+        return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome())).build();
     }
 
     @Override
-    public Response update(Long idTipoProduto, TipoProduto tipoProduto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public Response update(Long idTipoProduto, TipoProdutoDTO tipoProduto) {
+        try {
+
+            TipoProduto entity = repository.findById(idTipoProduto);
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa() == entity.getEmpresa()) {
+                entity.setNome(tipoProduto.nome());
+                return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome())).build();
+
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+        }
     }
 
     @Override
     public Response delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        TipoProduto entity = repository.findById(id);
+        entity.setAtivo(false);
+        return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome())).build();
     }
-    
+
 }

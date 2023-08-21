@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Status;
 import jakarta.ws.rs.core.Response;
 import k.dto.EmpresaDTO;
 import k.dto.EmpresaResponseDTO;
@@ -14,6 +15,9 @@ import k.repository.UsuarioRepository;
 import k.service.EmpresaService;
 import k.service.UsuarioLogadoService;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class EmpresaServiceImpl implements EmpresaService {
 
     @Inject
@@ -50,20 +54,36 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     @Override
     public Response insert(EmpresaDTO empresa) {
-        Empresa entity = new Empresa();
-        entity.setNome(empresa.nome());
-        entity.setAdmin(usuarioRepository.findById(empresa.usuarioId()));
-        entity.setNomeFantasia(empresa.nomeFantasia());
-        entity.setCnpj(empresa.cnpj());
-        entity.setComentario(empresa.comentario());
-        return Response.ok(new EmpresaResponseDTO(entity)).build();
+        try {
+            Empresa entity = new Empresa();
+            entity.setNome(empresa.nome());
+            entity.setAdmin(usuarioRepository.findById(empresa.usuarioId()));
+            entity.setNomeFantasia(empresa.nomeFantasia());
+            entity.setCnpj(empresa.cnpj());
+            entity.setComentario(empresa.comentario());
+            return Response.ok(new EmpresaResponseDTO(entity)).build();
+
+        } catch (Exception e) {
+            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+        }
     }
 
     @Override
-    public Response updateNome(EmpresaUpdateNomeDTO empresaUpdateNomeDTO) {
-        Empresa entity = repository.findById(empresaUpdateNomeDTO.idEmpresa());
-        entity.setNome(empresaUpdateNomeDTO.nome());
-        return Response.ok(new EmpresaResponseDTO(entity)).build();
+    public Response updateNomeFantasia(EmpresaUpdateNomeDTO empresaUpdateNomeDTO) {
+        try {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getAdmin() == usuarioLogadoService
+                    .getPerfilUsuarioLogado()) {
+                Empresa entity = repository
+                        .findById(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId());
+                entity.setNomeFantasia(empresaUpdateNomeDTO.nomeFantasia());
+                return Response.ok(new EmpresaResponseDTO(entity)).build();
+            } else {
+                throw new Exception();
+            }
+
+        } catch (Exception e) {
+            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+        }
     }
 
     @Override

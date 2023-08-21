@@ -19,7 +19,7 @@ public interface EmpresaService {
 
     public Response insert(EmpresaDTO empresa);
 
-    public Response updateNome(EmpresaUpdateNomeDTO empresaUpdateNomeDTO);
+    public Response updateNomeFantasia(EmpresaUpdateNomeDTO empresaUpdateNomeDTO);
 
     public Response adicionarFuncionario(Long id);
 

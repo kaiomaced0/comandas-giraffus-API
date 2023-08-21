@@ -4,23 +4,25 @@ import java.util.List;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import k.model.Produto;
+import k.dto.ProdutoAdicionaRetiraDTO;
+import k.dto.ProdutoDTO;
+import k.dto.ProdutoResponseDTO;
 
 public interface ProdutoService {
-    
-    public List<Produto> getAll();
 
-    public List<Produto> getNome();
+    public List<ProdutoResponseDTO> getAll();
 
-    public List<Produto> getId();
+    public List<ProdutoResponseDTO> getNome(String nome);
 
-    public Response insert(Produto produto);
+    public Response getId(Long id);
 
-    public Response update(@PathParam("idProduto") Long idProduto, Produto produto);
+    public Response insert(ProdutoDTO produto);
+
+    public Response update(@PathParam("idProduto") Long idProduto, ProdutoDTO produto);
 
     public Response delete(@PathParam("id") Long id);
 
-    public Response retiraEstoque(@PathParam("id") Long id, int quantidade);
-    
-    public Response adicionaEstoque(@PathParam("id") Long id, int quantidade);
+    public Response retiraEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO);
+
+    public Response adicionaEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO);
 }
