@@ -4,8 +4,9 @@ import java.util.List;
 
 public record PedidoDTO(
 
-        List<Long> listIdItemCompra,
-        String observacao,
-        Integer quantidadePessoas) {
+                List<Long> listIdItemCompra,
+                Long idComanda,
+                String observacao,
+                Integer quantidadePessoas) {
 
 }

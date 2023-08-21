@@ -21,6 +21,8 @@ public class Pagamento extends EntityClass {
 
     private Double valorPagamento;
 
+    private Double valorGorjeta;
+
     public Comanda getComanda() {
         return comanda;
     }
@@ -59,5 +61,13 @@ public class Pagamento extends EntityClass {
 
     public void setUsuarioCaixa(Usuario usuarioCaixa) {
         this.usuarioCaixa = usuarioCaixa;
+    }
+
+    public Double getValorGorjeta() {
+        return valorGorjeta;
+    }
+
+    public void setValorGorjeta(Double valorGorjeta) {
+        this.valorGorjeta = valorGorjeta;
     }
 }

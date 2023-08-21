@@ -1,7 +1,8 @@
 package k.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record EmpresaUpdateNomeDTO(
-        Long idEmpresa,
-        String nome) {
+        @NotBlank String nomeFantasia) {
 
 }

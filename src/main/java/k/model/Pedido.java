@@ -19,6 +19,18 @@ public class Pedido extends EntityClass {
 
     private Integer quantidadePessoas;
 
+    @ManyToOne
+    @JoinColumn(name = "comanda_pedido")
+    private Comanda comanda;
+
+    public Comanda getComanda() {
+        return comanda;
+    }
+
+    public void setComanda(Comanda comanda) {
+        this.comanda = comanda;
+    }
+
     public List<ItemCompra> getItemCompras() {
         return itemCompras;
     }
@@ -50,4 +62,5 @@ public class Pedido extends EntityClass {
     public void setQuantidadePessoas(Integer quantidadePessoas) {
         this.quantidadePessoas = quantidadePessoas;
     }
+
 }

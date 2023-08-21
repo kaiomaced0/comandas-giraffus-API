@@ -1,4 +1,5 @@
 package k.model;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -6,7 +7,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Empresa extends EntityClass{
+public class Empresa extends EntityClass {
 
     private String nome;
     private String cnpj;
@@ -26,6 +27,10 @@ public class Empresa extends EntityClass{
     @OneToMany
     @JoinColumn(name = "lista_produto_empresa")
     private List<Produto> produtos;
+
+    @OneToMany
+    @JoinColumn(name = "tipoproduto_empresa")
+    private List<TipoProduto> tipoProdutos;
 
     @OneToMany
     @JoinColumn(name = "lista_caixa_empresa")
@@ -151,5 +156,13 @@ public class Empresa extends EntityClass{
 
     public void setFuncionarios(List<Usuario> funcionarios) {
         this.funcionarios = funcionarios;
+    }
+
+    public List<TipoProduto> getTipoProdutos() {
+        return tipoProdutos;
+    }
+
+    public void setTipoProdutos(List<TipoProduto> tipoProdutos) {
+        this.tipoProdutos = tipoProdutos;
     }
 }

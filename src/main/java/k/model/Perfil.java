@@ -29,14 +29,11 @@ public enum Perfil {
     public static Perfil valueOf(Integer id) throws IllegalArgumentException {
         if (id == null)
             return null;
-        for(Perfil perfil : Perfil.values()) {
+        for (Perfil perfil : Perfil.values()) {
             if (id.equals(perfil.getId()))
                 return perfil;
-        } 
+        }
         throw new IllegalArgumentException("Id inválido:" + id);
     }
 
-    
-    
 }
- 

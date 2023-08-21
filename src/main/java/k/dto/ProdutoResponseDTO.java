@@ -5,13 +5,13 @@ import k.model.Produto;
 public record ProdutoResponseDTO(
         Long id,
         String nome,
-        Double preco,
+        Double valorVenda,
         Integer estoque) {
 
     public ProdutoResponseDTO(Produto produto) {
         this(produto.getId(),
                 produto.getNome(),
-                produto.getPreco(),
+                produto.getValorVenda(),
                 produto.getEstoque());
     }
 

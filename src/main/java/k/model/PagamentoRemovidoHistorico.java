@@ -9,7 +9,7 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class PagamentoRemovidoHistorico {
+public class PagamentoRemovidoHistorico extends EntityClass {
 
     @OneToOne
     @JoinColumn(name = "pagamento_pagamentoRemovidoHistorico")

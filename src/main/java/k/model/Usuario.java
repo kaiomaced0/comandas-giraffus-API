@@ -22,6 +22,8 @@ public class Usuario extends EntityClass {
     @Size(min = 5, max = 20)
     private String login;
 
+    private String email;
+
     private String senha;
 
     @Size(min = 11, max = 11)
@@ -74,7 +76,22 @@ public class Usuario extends EntityClass {
 
     public void setPerfis(Set<Perfil> perfis) {
         this.perfis = perfis;
-    } 
+    }
 
-    
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }
