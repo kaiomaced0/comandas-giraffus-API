@@ -21,21 +21,22 @@ import k.dto.UsuarioUpdateNomeGerenteDTO;
 import k.dto.UsuarioUpdateSenhaGerenteDTO;
 import k.service.UsuarioService;
 
-    @Path("/usuario")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+@Path("/usuario")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class UsuarioResource {
 
     @Inject
     UsuarioService service;
 
-    @PermitAll
+    @RolesAllowed({ "Admin" })
     @GET
     public List<UsuarioResponseDTO> getFuncionario() {
         return service.getFuncionarios();
     }
 
-    @RolesAllowed({ "Master" })
+    // @RolesAllowed({ "Master" })
+    @PermitAll
     @GET
     @Path("/all")
     public List<UsuarioResponseDTO> getAll() {

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Status;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.PagamentoDTO;
 import k.dto.PagamentoDeleteDTO;
@@ -61,6 +62,7 @@ public class PagamentoServiceImpl implements PagamentoService {
     }
 
     @Override
+    @Transactional
     public Response insert(PagamentoDTO pagamentoDTO) {
         try {
             Pagamento entity = new Pagamento();
@@ -85,6 +87,7 @@ public class PagamentoServiceImpl implements PagamentoService {
     }
 
     @Override
+    @Transactional
     public Response delete(PagamentoDeleteDTO pagamentoDeleteDTO) {
         Pagamento pagamento = repository.findById(pagamentoDeleteDTO.id());
         pagamento.setAtivo(false);

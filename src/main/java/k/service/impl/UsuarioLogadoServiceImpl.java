@@ -4,6 +4,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.UsuarioResponseDTO;
 import k.dto.UsuarioUpdateEmailDTO;
@@ -31,6 +32,7 @@ public class UsuarioLogadoServiceImpl implements UsuarioLogadoService {
     UsuarioRepository usuarioRepository;
 
     @Override
+    @Transactional
     public Response updateSenha(UsuarioUpdateSenhaDTO usuarioUpdateSenha) {
         Usuario entity = usuarioRepository.findById(getPerfilUsuarioLogado().getId());
         try {
@@ -64,6 +66,7 @@ public class UsuarioLogadoServiceImpl implements UsuarioLogadoService {
     }
 
     @Override
+    @Transactional
     public Response updateLogin(UsuarioUpdateLoginDTO usuarioUpdateLoginDTO) {
         Usuario entity = usuarioRepository.findById(getPerfilUsuarioLogado().getId());
         try {
@@ -77,6 +80,7 @@ public class UsuarioLogadoServiceImpl implements UsuarioLogadoService {
     }
 
     @Override
+    @Transactional
     public Response updateEmail(UsuarioUpdateEmailDTO usuarioUpdateEmailDTO) {
         Usuario entity = usuarioRepository.findById(getPerfilUsuarioLogado().getId());
         try {

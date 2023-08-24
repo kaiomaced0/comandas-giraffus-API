@@ -16,14 +16,10 @@ public class Comanda extends EntityClass {
 
     private Double preco;
 
-    @ManyToOne
-    @JoinColumn(name = "empresa_comanda")
-    private Empresa empresa;
-
     private Boolean finalizada;
 
     @OneToOne
-    @JoinColumn(name = "pagamento_comanda")
+    @JoinColumn(name = "comanda_pagamento")
     private Pagamento pagamento;
 
     @ManyToOne
@@ -31,14 +27,6 @@ public class Comanda extends EntityClass {
     private Usuario atendente;
 
     private Boolean taxaServico;
-
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
 
     public Pagamento getPagamento() {
         return pagamento;

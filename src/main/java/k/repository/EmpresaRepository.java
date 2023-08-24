@@ -14,9 +14,9 @@ public class EmpresaRepository implements PanacheRepository<Empresa> {
         return find("UPPER(nome) LIKE ?1 ", "%" + nome.toUpperCase() + "%").list();
     }
 
-    public Empresa findByCnpj(String cnpj) {
+    public List<Empresa> findByCnpj(String cnpj) {
         if (cnpj == null)
             return null;
-        return find("UPPER(cnpj) LIKE ?1 ", "%" + cnpj.toUpperCase() + "%").firstResult();
+        return find("UPPER(cnpj) LIKE ?1 ", "%" + cnpj.toUpperCase() + "%").list();
     }
 }

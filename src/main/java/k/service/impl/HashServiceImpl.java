@@ -7,8 +7,6 @@ import java.util.Base64;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import k.model.Perfil;
-import k.resource.HashResource;
 import k.service.HashService;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -33,6 +31,8 @@ public class HashServiceImpl implements HashService {
     }
 
     public static void main(String[] args) {
-        System.out.println(Perfil.valueOf(0).getLabel());
+
+        HashService service = new HashServiceImpl();
+        System.out.println(service.getHashSenha("123456"));
     }
 }

@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class EmpresaPagamento extends EntityClass {
-    @ManyToOne
-    private Empresa empresa;
 
     private String data;
 
@@ -20,14 +18,6 @@ public class EmpresaPagamento extends EntityClass {
 
     public void setValor(Double valor) {
         this.valor = valor;
-    }
-
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
     }
 
     public String getData() {

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -14,6 +15,7 @@ import k.dto.CaixaDTO;
 import k.dto.CaixaResponseDTO;
 import k.model.Caixa;
 import k.repository.CaixaRepository;
+import k.repository.EmpresaRepository;
 import k.service.CaixaService;
 import k.service.UsuarioLogadoService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -28,6 +30,9 @@ public class CaixaServiceImpl implements CaixaService {
 
     @Inject
     UsuarioLogadoService usuarioLogadoService;
+
+    @Inject
+    EmpresaRepository empresaRepository;
 
     @Override
     public List<CaixaResponseDTO> getAll() {
@@ -49,8 +54,8 @@ public class CaixaServiceImpl implements CaixaService {
     @Override
     public CaixaResponseDTO getId(Long id) {
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId() == repository.findById(id)
-                    .getEmpresa().getId()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas()
+                    .contains(repository.findById(id))) {
                 LOG.info("Requisição Caixa.getId()");
                 return new CaixaResponseDTO(repository.findById(id));
             } else {
@@ -64,17 +69,18 @@ public class CaixaServiceImpl implements CaixaService {
     }
 
     @Override
+    @Transactional
     public Response insert(CaixaDTO caixaDTO) {
         try {
 
             LOG.info("Requisição Caixa.insert()");
             Caixa caixa = new Caixa();
             caixa = CaixaDTO.criaCaixa(caixaDTO);
-            caixa.setEmpresa(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa());
             caixa.setDataInclusao(LocalDateTime.now());
             caixa.setFechado(false);
             caixa.setValorTotal(0.0);
             repository.persist(caixa);
+            usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas().add(caixa);
 
             return Response.status(Status.OK).build();
 
@@ -85,10 +91,11 @@ public class CaixaServiceImpl implements CaixaService {
     }
 
     @Override
+    @Transactional
     public Response delete(Long id) {
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId() == repository.findById(id)
-                    .getEmpresa().getId()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas()
+                    .contains(repository.findById(id))) {
                 Caixa entity = repository.findById(id);
                 entity.setAtivo(false);
                 LOG.info("Requisição Caixa.delete()");
@@ -103,10 +110,11 @@ public class CaixaServiceImpl implements CaixaService {
     }
 
     @Override
+    @Transactional
     public Response fechar(Long id) {
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId() == repository.findById(id)
-                    .getEmpresa().getId()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas()
+                    .contains(repository.findById(id))) {
                 Caixa entity = repository.findById(id);
                 entity.setFechado(true);
                 LOG.info("Requisição Caixa.fechar()");

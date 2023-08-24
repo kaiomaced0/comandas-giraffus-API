@@ -50,12 +50,13 @@ public class EmpresaResource {
     @GET
     @Path("/cnpj/{cnpj}")
     @RolesAllowed({ "Master" })
-    public EmpresaResponseDTO getCnpj(@PathParam("cnpj") String cnpj) {
+    public List<EmpresaResponseDTO> getCnpj(@PathParam("cnpj") String cnpj) {
         return service.getCnpj(cnpj);
     }
 
     @POST
     @RolesAllowed({ "Master" })
+    @Transactional
     public Response insert(EmpresaDTO Empresa) {
         return service.insert(Empresa);
     }

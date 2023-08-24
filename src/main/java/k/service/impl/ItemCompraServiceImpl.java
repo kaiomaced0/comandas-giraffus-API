@@ -2,6 +2,7 @@ package k.service.impl;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Status;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.ItemCompraDTO;
 import k.dto.ItemCompraUpdateDTO;
@@ -31,10 +32,11 @@ public class ItemCompraServiceImpl implements ItemCompraService {
     ComandaService comandaService;
 
     @Override
+    @Transactional
     public Response insert(ItemCompraDTO itemCompraDTO) {
         try {
             Produto p = produtoRepository.findById(itemCompraDTO.produtoId());
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa() == p.getEmpresa()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
 
                 ItemCompra itemCompra = new ItemCompra();
                 itemCompra.setProduto(p);
@@ -52,11 +54,12 @@ public class ItemCompraServiceImpl implements ItemCompraService {
     }
 
     @Override
+    @Transactional
     public Response update(ItemCompraUpdateDTO itemCompraUpdateDTO) {
 
         try {
             Produto p = produtoRepository.findById(itemCompraUpdateDTO.produtoId());
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa() == p.getEmpresa()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
 
                 ItemCompra entity = repository.findById(itemCompraUpdateDTO.itemCompraId());
                 entity.setProduto(p);
@@ -73,18 +76,14 @@ public class ItemCompraServiceImpl implements ItemCompraService {
     }
 
     @Override
+    @Transactional
     public Response delete(Long id) {
         try {
 
             ItemCompra itemCompra = repository.findById(id);
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa() == itemCompra.getPedido().getComanda()
-                    .getEmpresa()) {
-                repository.delete(itemCompra);
-                comandaService.updatePreco(itemCompra.getPedido().getComanda().getId());
-                return Response.ok().build();
-            } else {
-                throw new Exception();
-            }
+            repository.delete(itemCompra);
+            comandaService.updatePreco(itemCompra.getPedido().getComanda().getId());
+            return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Status.STATUS_NO_TRANSACTION).build();
         }

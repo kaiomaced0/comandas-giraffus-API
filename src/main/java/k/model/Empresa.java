@@ -44,14 +44,6 @@ public class Empresa extends EntityClass {
     @JoinColumn(name = "lista_comanda_empresa")
     private List<Comanda> comandas;
 
-    @OneToMany
-    @JoinColumn(name = "lista_pedido_empresa")
-    private List<Pedido> pedidos;
-
-    @OneToMany
-    @JoinColumn(name = "lista_funcionario_empresa")
-    private List<Usuario> funcionarios;
-
     private String comentario;
 
     public String getComentario() {
@@ -140,22 +132,6 @@ public class Empresa extends EntityClass {
 
     public void setComandas(List<Comanda> comandas) {
         this.comandas = comandas;
-    }
-
-    public List<Pedido> getPedidos() {
-        return pedidos;
-    }
-
-    public void setPedidos(List<Pedido> pedidos) {
-        this.pedidos = pedidos;
-    }
-
-    public List<Usuario> getFuncionarios() {
-        return funcionarios;
-    }
-
-    public void setFuncionarios(List<Usuario> funcionarios) {
-        this.funcionarios = funcionarios;
     }
 
     public List<TipoProduto> getTipoProdutos() {

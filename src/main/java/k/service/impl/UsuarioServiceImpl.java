@@ -8,6 +8,7 @@ import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Status;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.UsuarioDTO;
 import k.dto.UsuarioResponseDTO;
@@ -98,13 +99,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    @Transactional
     public Response insert(UsuarioDTO usuario) {
         try {
             Usuario entity = UsuarioDTO.criaUsuario(usuario);
-            entity.setSenha(hash.getHashSenha(entity.getSenha()));
+            entity.setSenha(hash.getHashSenha(usuario.senha()));
             // entity.setEmpresa(empresaRepository.findById(usuario.idEmpresa()));
             entity.setPerfis(new HashSet<Perfil>());
-            entity.getPerfis().add(Perfil.valueOf(0));
+            entity.getPerfis().add(Perfil.valueOf(usuario.idPerfil()));
             repository.persist(entity);
 
             LOG.info("Requisição Usuario.insert()");
@@ -116,6 +118,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    @Transactional
     public Response delete(Long id) {
         try {
             Usuario entity = repository.findById(id);
@@ -160,6 +163,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    @Transactional
     public Response updateNomeGerente(UsuarioUpdateNomeGerenteDTO usuarioUpdateNome) {
         try {
             LOG.info("Requisição Usuario.updateNome()");
@@ -174,6 +178,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    @Transactional
     public Response updateSenhaGerente(UsuarioUpdateSenhaGerenteDTO usuarioUpdateSenhaGerente) {
         try {
             Usuario entity = repository.findById(usuarioUpdateSenhaGerente.idUsuario());

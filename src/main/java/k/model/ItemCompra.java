@@ -15,7 +15,6 @@ public class ItemCompra extends EntityClass {
     private Double preco;
 
     @ManyToOne
-    @JoinColumn(name = "pedido_itemcompra")
     private Pedido pedido;
 
     public Integer getQuantidade() {

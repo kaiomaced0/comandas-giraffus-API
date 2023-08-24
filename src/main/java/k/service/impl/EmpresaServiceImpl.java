@@ -5,11 +5,13 @@ import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Status;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.EmpresaDTO;
 import k.dto.EmpresaResponseDTO;
 import k.dto.EmpresaUpdateNomeDTO;
 import k.model.Empresa;
+import k.model.Perfil;
 import k.repository.EmpresaRepository;
 import k.repository.UsuarioRepository;
 import k.service.EmpresaService;
@@ -37,14 +39,32 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     @Override
     public List<EmpresaResponseDTO> getNome(String nome) {
-        return repository.findByNome(nome).stream().map(empresa -> new EmpresaResponseDTO(empresa))
-                .collect(Collectors.toList());
+        try {
+            if (nome != null) {
+                return repository.findByNome(nome).stream().map(empresa -> new EmpresaResponseDTO(empresa))
+                        .collect(Collectors.toList());
+            } else {
+                throw new Exception();
+            }
 
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public EmpresaResponseDTO getCnpj(String cnpj) {
-        return new EmpresaResponseDTO(repository.findByCnpj(cnpj));
+    public List<EmpresaResponseDTO> getCnpj(String cnpj) {
+        try {
+            if (cnpj != null) {
+                return repository.findByCnpj(cnpj).stream().map(empresa -> new EmpresaResponseDTO(empresa))
+                        .collect(Collectors.toList());
+            } else {
+                throw new Exception();
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -53,6 +73,7 @@ public class EmpresaServiceImpl implements EmpresaService {
     }
 
     @Override
+    @Transactional
     public Response insert(EmpresaDTO empresa) {
         try {
             Empresa entity = new Empresa();
@@ -61,6 +82,8 @@ public class EmpresaServiceImpl implements EmpresaService {
             entity.setNomeFantasia(empresa.nomeFantasia());
             entity.setCnpj(empresa.cnpj());
             entity.setComentario(empresa.comentario());
+            usuarioRepository.findById(empresa.usuarioId()).getPerfis().add(Perfil.valueOf(1));
+            repository.persist(entity);
             return Response.ok(new EmpresaResponseDTO(entity)).build();
 
         } catch (Exception e) {
@@ -69,6 +92,7 @@ public class EmpresaServiceImpl implements EmpresaService {
     }
 
     @Override
+    @Transactional
     public Response updateNomeFantasia(EmpresaUpdateNomeDTO empresaUpdateNomeDTO) {
         try {
             if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getAdmin() == usuarioLogadoService
@@ -87,21 +111,22 @@ public class EmpresaServiceImpl implements EmpresaService {
     }
 
     @Override
+    @Transactional
     public Response adicionarFuncionario(Long id) {
-        usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getFuncionarios()
-                .add(usuarioRepository.findById(id));
+        usuarioRepository.findById(id).setEmpresa(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa());
         return Response.ok().build();
     }
 
     @Override
+    @Transactional
     public Response removerFuncionario(Long id) {
-        usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getFuncionarios()
-                .remove(usuarioRepository.findById(id));
+        usuarioRepository.findById(id).setEmpresa(null);
         return Response.ok().build();
 
     }
 
     @Override
+    @Transactional
     public Response inativar(Long id) {
         Empresa entity = repository.findById(id);
         entity.setAtivo(false);
@@ -109,6 +134,7 @@ public class EmpresaServiceImpl implements EmpresaService {
     }
 
     @Override
+    @Transactional
     public Response ativar(Long id) {
         Empresa entity = repository.findById(id);
         entity.setAtivo(true);

@@ -5,11 +5,13 @@ import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Status;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.ProdutoAdicionaRetiraDTO;
 import k.dto.ProdutoDTO;
 import k.dto.ProdutoResponseDTO;
 import k.model.Produto;
+import k.repository.EmpresaRepository;
 import k.repository.ProdutoRepository;
 import k.repository.TipoProdutoRepository;
 import k.service.ProdutoService;
@@ -29,11 +31,14 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Inject
     TipoProdutoRepository tipoProdutoRepository;
 
+    @Inject
+    EmpresaRepository empresaRepository;
+
     @Override
     public List<ProdutoResponseDTO> getAll() {
         return repository.listAll().stream()
-                .filter(produto -> produto.getEmpresa().getId() == usuarioLogadoService.getPerfilUsuarioLogado()
-                        .getEmpresa().getId())
+                .filter(produto -> usuarioLogadoService.getPerfilUsuarioLogado()
+                        .getEmpresa().getProdutos().contains(produto))
                 .map(produto -> new ProdutoResponseDTO(produto))
                 .collect(Collectors.toList());
     }
@@ -41,8 +46,8 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     public List<ProdutoResponseDTO> getNome(String nome) {
         return repository.findByNome(nome).stream()
-                .filter(produto -> produto.getEmpresa().getId() == usuarioLogadoService.getPerfilUsuarioLogado()
-                        .getEmpresa().getId())
+                .filter(produto -> usuarioLogadoService.getPerfilUsuarioLogado()
+                        .getEmpresa().getProdutos().contains(produto))
                 .map(produto -> new ProdutoResponseDTO(produto))
                 .collect(Collectors.toList());
     }
@@ -51,7 +56,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     public Response getId(Long id) {
         Produto p = repository.findById(id);
         try {
-            if (p.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
                 return Response.ok(new ProdutoResponseDTO(p)).build();
             } else {
                 throw new Exception();
@@ -63,25 +68,29 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Transactional
     public Response insert(ProdutoDTO produto) {
         Produto p = ProdutoDTO.criaProduto(produto);
-        p.setEmpresa(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa());
+
         p.setTipoProduto(tipoProdutoRepository.findById(produto.idTipoProduto()));
         repository.persist(p);
+        usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().add(p);
         return Response.ok(new ProdutoResponseDTO(p)).build();
 
     }
 
     @Override
+    @Transactional
     public Response update(Long idProduto, ProdutoDTO produtoDTO) {
         Produto p = repository.findById(idProduto);
         try {
-            if (p.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
                 p.setNome(produtoDTO.nome());
                 p.setValorCompra(produtoDTO.valorCompra());
                 p.setValorVenda(produtoDTO.valorVenda());
                 p.setEstoque(produtoDTO.estoque());
                 p.setTipoProduto(tipoProdutoRepository.findById(produtoDTO.idTipoProduto()));
+                
                 return Response.ok(new ProdutoResponseDTO(p)).build();
             } else {
                 throw new Exception();
@@ -93,10 +102,11 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Transactional
     public Response delete(Long id) {
         Produto p = repository.findById(id);
         try {
-            if (p.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
                 p.setAtivo(false);
                 return Response.ok(new ProdutoResponseDTO(p)).build();
             } else {
@@ -108,10 +118,11 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Transactional
     public Response retiraEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO) {
         Produto p = repository.findById(produtoAdicionaRetiraDTO.id());
         try {
-            if (p.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
                 Integer a = p.getEstoque();
                 p.setEstoque(p.getEstoque() - produtoAdicionaRetiraDTO.quantidade());
                 return Response.ok("Valor Anterior -" + a + ", valor atual - " + p.getEstoque() + " .").build();
@@ -124,10 +135,11 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Transactional
     public Response adicionaEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO) {
         Produto p = repository.findById(produtoAdicionaRetiraDTO.id());
         try {
-            if (p.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa()) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
                 Integer a = p.getEstoque();
                 p.setEstoque(p.getEstoque() + produtoAdicionaRetiraDTO.quantidade());
                 return Response.ok("Valor Anterior -" + a + ", valor atual - " + p.getEstoque() + " .").build();

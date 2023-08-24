@@ -19,19 +19,8 @@ public class Produto extends EntityClass {
     private Double valorVenda;
 
     @ManyToOne
-    private Empresa empresa;
-
-    @ManyToOne
     @JoinColumn(name = "tipoproduto_produto")
     private TipoProduto tipoProduto;
-
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
 
     public TipoProduto getTipoProduto() {
         return tipoProduto;

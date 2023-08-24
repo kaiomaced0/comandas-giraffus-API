@@ -20,10 +20,6 @@ public class Caixa extends EntityClass {
     @JoinColumn(name = "pagamento_caixa")
     private List<Pagamento> pagamentos;
 
-    @ManyToOne
-    @JoinColumn(name = "empresa_caixa")
-    private Empresa empresa;
-
     private Double valorTotal;
 
     private LocalDate dataCaixa;
@@ -32,14 +28,7 @@ public class Caixa extends EntityClass {
 
     private Boolean fechado;
 
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
-
+    
     public Boolean getFechado() {
         return fechado;
     }

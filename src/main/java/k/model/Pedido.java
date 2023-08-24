@@ -20,7 +20,6 @@ public class Pedido extends EntityClass {
     private Integer quantidadePessoas;
 
     @ManyToOne
-    @JoinColumn(name = "comanda_pedido")
     private Comanda comanda;
 
     public Comanda getComanda() {

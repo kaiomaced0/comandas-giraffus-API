@@ -8,12 +8,11 @@ public record UsuarioDTO(
         String senha,
         String cpf,
         Long idEmpresa,
-        Long idPerfil) {
+        Integer idPerfil) {
     public static Usuario criaUsuario(UsuarioDTO usuarioDTO) {
         Usuario entity = new Usuario();
         entity.setNome(usuarioDTO.nome());
         entity.setLogin(usuarioDTO.login());
-        entity.setSenha(usuarioDTO.senha());
         entity.setCpf(usuarioDTO.cpf());
         return entity;
     }

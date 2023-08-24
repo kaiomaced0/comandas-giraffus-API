@@ -13,7 +13,7 @@ public interface EmpresaService {
 
     public List<EmpresaResponseDTO> getNome(String nome);
 
-    public EmpresaResponseDTO getCnpj(String cnpj);
+    public List<EmpresaResponseDTO> getCnpj(String cnpj);
 
     public EmpresaResponseDTO getId(Long id);
 

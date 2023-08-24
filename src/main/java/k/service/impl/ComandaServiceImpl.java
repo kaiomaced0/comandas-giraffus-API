@@ -7,6 +7,7 @@ import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Status;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.ComandaDTO;
 import k.dto.ComandaPagarDTO;
@@ -73,10 +74,12 @@ public class ComandaServiceImpl implements ComandaService {
     }
 
     @Override
+    @Transactional
     public Response insert(ComandaDTO comanda) {
         try {
             Comanda entity = ComandaDTO.criaComanda(comanda);
             entity.setAtendente(usuarioLogadoService.getPerfilUsuarioLogado());
+            repository.persist(entity);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Status.STATUS_NO_TRANSACTION).build();
@@ -85,6 +88,7 @@ public class ComandaServiceImpl implements ComandaService {
     }
 
     @Override
+    @Transactional
     public Response updatePreco(Long id) {
         try {
 
@@ -105,6 +109,7 @@ public class ComandaServiceImpl implements ComandaService {
     }
 
     @Override
+    @Transactional
     public Response pagar(ComandaPagarDTO comandaPagarDTO) {
         try {
             Comanda entity = repository.findById(comandaPagarDTO.id());
@@ -118,6 +123,7 @@ public class ComandaServiceImpl implements ComandaService {
     }
 
     @Override
+    @Transactional
     public Response delete(Long id) {
         Comanda entity = repository.findById(id);
         entity.setAtivo(false);
