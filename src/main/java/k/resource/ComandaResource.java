@@ -56,8 +56,8 @@ public class ComandaResource {
     @POST
     @Transactional
     @RolesAllowed({ "Admin", "Caixa", "Garcom" })
-    public Response insert(ComandaDTO Comanda) {
-        return service.insert(Comanda);
+    public Response insert(ComandaDTO comanda) {
+        return service.insert(comanda);
     }
 
     @PATCH
