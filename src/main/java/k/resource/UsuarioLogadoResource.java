@@ -27,6 +27,8 @@ public class UsuarioLogadoResource {
     @Inject
     UsuarioLogadoService service;
 
+    @PermitAll
+    @GET
     public Usuario getPerfilUsuarioLogado() {
 
         return service.getPerfilUsuarioLogado();
