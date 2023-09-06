@@ -1,5 +1,6 @@
 package k.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
@@ -12,10 +13,12 @@ public class Produto extends EntityClass {
 
     private String nome;
 
-    private Integer Estoque;
+    private Integer estoque;
 
+    @Column(name = "valor_compra")
     private Double valorCompra;
 
+    @Column(name = "valor_venda")
     private Double valorVenda;
 
     @ManyToOne
@@ -55,11 +58,11 @@ public class Produto extends EntityClass {
     }
 
     public Integer getEstoque() {
-        return Estoque;
+        return estoque;
     }
 
     public void setEstoque(Integer estoque) {
-        Estoque = estoque;
+        estoque = estoque;
     }
 
 }
