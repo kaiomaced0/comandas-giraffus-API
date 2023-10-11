@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import k.model.Usuario;
+import k.repository.UsuarioRepository;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
@@ -34,13 +36,16 @@ public class CaixaServiceImpl implements CaixaService {
     @Inject
     EmpresaRepository empresaRepository;
 
+    @Inject
+    UsuarioRepository usuarioRepository;
+
     @Override
     public List<CaixaResponseDTO> getAll() {
         try {
             LOG.info("Requisição Caixa.getAll()");
             return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas().stream()
-                    .filter(caixa -> caixa.getAtivo() == true)
-                    .map(caixas -> new CaixaResponseDTO(caixas)).collect(Collectors.toList());
+                    .filter(Caixa::getAtivo)
+                    .map(CaixaResponseDTO::new).collect(Collectors.toList());
 
         } catch (
 
@@ -55,7 +60,7 @@ public class CaixaServiceImpl implements CaixaService {
     public CaixaResponseDTO getId(Long id) {
         try {
             if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas()
-                    .contains(repository.findById(id))) {
+                    .contains(repository.findById(id)) && repository.findById(id).getAtivo()) {
                 LOG.info("Requisição Caixa.getId()");
                 return new CaixaResponseDTO(repository.findById(id));
             } else {
@@ -74,19 +79,18 @@ public class CaixaServiceImpl implements CaixaService {
         try {
 
             LOG.info("Requisição Caixa.insert()");
-            Caixa caixa = new Caixa();
-            caixa = CaixaDTO.criaCaixa(caixaDTO);
+            Caixa caixa = CaixaDTO.criaCaixa(caixaDTO);
             caixa.setDataInclusao(LocalDateTime.now());
             caixa.setFechado(false);
             caixa.setValorTotal(0.0);
             repository.persist(caixa);
-            usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas().add(caixa);
-
+            Usuario u = usuarioRepository.findById(usuarioLogadoService.getPerfilUsuarioLogado().getId());
+            u.getEmpresa().getCaixas().add(caixa);
             return Response.status(Status.OK).build();
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Caixa.insert()");
-            return Response.status(Status.NO_CONTENT).build();
+            return Response.status(Status.BAD_REQUEST).build();
         }
     }
 

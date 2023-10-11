@@ -1,8 +1,10 @@
 package k.dto;
 
-public record AuthUsuarioDTO (
-    String login,
-    String senha
+import jakarta.validation.constraints.NotBlank;
 
-)
- {}
+public record AuthUsuarioDTO(
+        @NotBlank String login,
+        @NotBlank String senha
+
+) {
+}

@@ -3,7 +3,6 @@ package k.resource;
 import jakarta.annotation.security.PermitAll;
 
 import jakarta.inject.Inject;
-import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -16,7 +15,6 @@ import k.dto.UsuarioResponseDTO;
 import k.dto.UsuarioUpdateEmailDTO;
 import k.dto.UsuarioUpdateLoginDTO;
 import k.dto.UsuarioUpdateSenhaDTO;
-import k.model.Usuario;
 import k.service.UsuarioLogadoService;
 
 @Path("/usuariologado")
@@ -29,11 +27,11 @@ public class UsuarioLogadoResource {
 
     @PermitAll
     @GET
-    public Usuario getPerfilUsuarioLogado() {
+    public UsuarioResponseDTO getPerfilUsuarioLogado() {
 
-        return service.getPerfilUsuarioLogado();
+        return new UsuarioResponseDTO(service.getPerfilUsuarioLogado());
 
-    }   
+    }
 
     @PATCH
     @PermitAll

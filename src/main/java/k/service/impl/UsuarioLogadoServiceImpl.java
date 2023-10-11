@@ -51,16 +51,17 @@ public class UsuarioLogadoServiceImpl implements UsuarioLogadoService {
 
     public Usuario getPerfilUsuarioLogado() {
 
+        Usuario user = new Usuario();
         try {
             LOG.info("Requisição UsuarioLogado.getPerfilUsuarioLogado()");
 
             String login = jsonWebToken.getSubject();
-            Usuario user = usuarioRepository.findByLogin(login);
+            user = usuarioRepository.findByLogin(login);
 
             return user;
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição UsuarioLogado.getPerfilUsuarioLogado()");
-            return null;
+            return user;
         }
 
     }

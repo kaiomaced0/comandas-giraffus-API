@@ -3,6 +3,7 @@ package k.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import k.model.Empresa;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
@@ -79,6 +80,9 @@ public class ComandaServiceImpl implements ComandaService {
         try {
             Comanda entity = ComandaDTO.criaComanda(comanda);
             entity.setAtendente(usuarioLogadoService.getPerfilUsuarioLogado());
+            Empresa e = empresaRepository.findById(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId());
+            e.getComandas().add(entity);
+            empresaRepository.persist(e);
             repository.persist(entity);
             return Response.ok().build();
         } catch (Exception e) {

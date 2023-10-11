@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
+import k.dto.AuthUsuarioDTO;
 import k.dto.UsuarioDTO;
 import k.dto.UsuarioResponseDTO;
 import k.dto.UsuarioUpdateNomeGerenteDTO;
@@ -18,7 +19,9 @@ public interface UsuarioService {
 
     public List<UsuarioResponseDTO> getNome(String nome);
 
-    public Usuario findByLoginAndSenha(String login, String senha);
+    public Usuario findByLoginAndSenha(AuthUsuarioDTO auth);
+
+    public Usuario findByEmailAndSenha(AuthUsuarioDTO auth);
 
     public UsuarioResponseDTO getId(Long id);
 
@@ -27,7 +30,6 @@ public interface UsuarioService {
     public Response updateNomeGerente(UsuarioUpdateNomeGerenteDTO usuarioUpdateNome);
 
     public Response updateSenhaGerente(UsuarioUpdateSenhaGerenteDTO usuarioUpdateSenhaGerente);
-
 
     public Response delete(@PathParam("id") Long id);
 }

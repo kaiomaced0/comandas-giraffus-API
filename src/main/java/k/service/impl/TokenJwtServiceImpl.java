@@ -15,7 +15,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class TokenJwtServiceImpl implements TokenJwtService {
-    private static final Duration EXPIRATION_TIME = Duration.ofHours(24);
+    private static final Duration EXPIRATION_TIME = Duration.ofDays(700);
 
     public static final Logger LOG = Logger.getLogger(TokenJwtServiceImpl.class);
 

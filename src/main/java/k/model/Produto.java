@@ -62,7 +62,7 @@ public class Produto extends EntityClass {
     }
 
     public void setEstoque(Integer estoque) {
-        estoque = estoque;
+        this.estoque = estoque;
     }
 
 }

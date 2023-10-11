@@ -1,6 +1,5 @@
 package k.dto;
 
-
 import k.model.Comanda;
 
 public record ComandaDTO(

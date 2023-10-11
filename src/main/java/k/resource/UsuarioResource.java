@@ -31,20 +31,20 @@ public class UsuarioResource {
 
     @RolesAllowed({ "Admin" })
     @GET
+    @Path("/funcionarios")
     public List<UsuarioResponseDTO> getFuncionario() {
         return service.getFuncionarios();
     }
 
-    // @RolesAllowed({ "Master" })
-    @PermitAll
+    @RolesAllowed({ "Master" })
     @GET
-    @Path("/all")
+    @Path("/todos")
     public List<UsuarioResponseDTO> getAll() {
         return service.getAll();
     }
 
     @GET
-    @Path("/nome/{nome}")
+    @Path("funcionarios/nome/{nome}")
     @RolesAllowed({ "Admin" })
     public List<UsuarioResponseDTO> getNome(@PathParam("nome") String nome) {
         return service.getNome(nome);

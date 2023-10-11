@@ -4,8 +4,11 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import k.dto.EmpresaResponseDTO;
 import k.dto.ItemCompraDTO;
+import k.dto.ItemCompraResponseDTO;
 import k.dto.ItemCompraUpdateDTO;
+import k.model.Empresa;
 import k.model.ItemCompra;
 import k.model.Produto;
 import k.repository.ItemCompraRepository;
@@ -13,6 +16,9 @@ import k.repository.ProdutoRepository;
 import k.service.ComandaService;
 import k.service.ItemCompraService;
 import k.service.UsuarioLogadoService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -30,6 +36,15 @@ public class ItemCompraServiceImpl implements ItemCompraService {
 
     @Inject
     ComandaService comandaService;
+
+    // @Override
+    // public List<ItemCompraResponseDTO> getAll() {
+    //     return repository.findAll().stream().filter(ItemCompra::getAtivo)
+    //             .filter(item -> usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas()
+    //                     .contains(item.getPedido().getComanda()))
+    //             .map(ItemCompraResponseDTO::new)
+    //             .collect(Collectors.toList());
+    // }
 
     @Override
     @Transactional

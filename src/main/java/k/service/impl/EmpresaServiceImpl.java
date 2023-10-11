@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 import k.dto.EmpresaDTO;
 import k.dto.EmpresaResponseDTO;
 import k.dto.EmpresaUpdateNomeDTO;
+import k.dto.EmpresaUpdateNomeMasterDTO;
 import k.model.Empresa;
 import k.model.Perfil;
 import k.repository.EmpresaRepository;
@@ -33,7 +34,15 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     @Override
     public List<EmpresaResponseDTO> getAll() {
-        return repository.findAll().stream().map(empresa -> new EmpresaResponseDTO(empresa))
+        return repository.findAll().stream().filter(Empresa::getAtivo)
+                .map(EmpresaResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EmpresaResponseDTO> getAllInativos() {
+        return repository.findAll().stream().filter(empresa -> !empresa.getAtivo())
+                .map(EmpresaResponseDTO::new)
                 .collect(Collectors.toList());
     }
 
@@ -139,6 +148,19 @@ public class EmpresaServiceImpl implements EmpresaService {
         Empresa entity = repository.findById(id);
         entity.setAtivo(true);
         return Response.ok().build();
+    }
+
+    @Override
+    public Response updateNomeFantasiaMaster(EmpresaUpdateNomeMasterDTO empresaUpdateNomeMasterDTO) {
+        try {
+            Empresa entity = repository
+                    .findById(empresaUpdateNomeMasterDTO.idEmpresa());
+            entity.setNomeFantasia(empresaUpdateNomeMasterDTO.nomeFantasia());
+            return Response.ok(new EmpresaResponseDTO(entity)).build();
+
+        } catch (Exception e) {
+            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+        }
     }
 
 }

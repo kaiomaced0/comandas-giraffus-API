@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import k.dto.EmpresaDTO;
 import k.dto.EmpresaResponseDTO;
-import k.dto.EmpresaUpdateNomeDTO;
+import k.dto.EmpresaUpdateNomeMasterDTO;
 import k.service.EmpresaService;
 
 @Path("/empresa")
@@ -31,6 +31,13 @@ public class EmpresaResource {
     @RolesAllowed({ "Master" })
     public List<EmpresaResponseDTO> getAll() {
         return service.getAll();
+    }
+
+    @GET
+    @Path("/inativas")
+    @RolesAllowed({ "Master" })
+    public List<EmpresaResponseDTO> getInativos() {
+        return service.getAllInativos();
     }
 
     @GET
@@ -62,27 +69,11 @@ public class EmpresaResource {
     }
 
     @PATCH
-    @Path("/adicionarfuncionario/{id}")
-    @RolesAllowed({ "Admin" })
-    @Transactional
-    public Response adicionarFuncionario(@PathParam("id") Long id) {
-        return service.adicionarFuncionario(id);
-    }
-
-    @PATCH
     @Path("/mudarnomefantasia/{nome}")
-    @RolesAllowed({ "Admin" })
+    @RolesAllowed({ "Master" })
     @Transactional
-    public Response updateNomeFantasia(EmpresaUpdateNomeDTO empresaUpdateNomeDTO) {
-        return service.updateNomeFantasia(empresaUpdateNomeDTO);
-    }
-
-    @PATCH
-    @Path("/removerfuncionario/{id}")
-    @RolesAllowed({ "Admin" })
-    @Transactional
-    public Response removerFuncionario(@PathParam("id") Long id) {
-        return service.removerFuncionario(id);
+    public Response updateNomeFantasia(EmpresaUpdateNomeMasterDTO empresaUpdateNomeDTO) {
+        return service.updateNomeFantasiaMaster(empresaUpdateNomeDTO);
     }
 
     @PATCH

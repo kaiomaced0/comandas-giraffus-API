@@ -4,7 +4,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import k.dto.AuthUsuarioDTO;
 import k.model.Usuario;
-import k.service.HashService;
 import k.service.TokenJwtService;
 import k.service.UsuarioService;
 import jakarta.annotation.security.PermitAll;
@@ -23,9 +22,6 @@ import jakarta.ws.rs.core.Response.Status;
 public class AuthResource {
 
     @Inject
-    HashService hashService;
-
-    @Inject
     UsuarioService usuarioService;
 
     @Inject
@@ -39,13 +35,20 @@ public class AuthResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response login(AuthUsuarioDTO authDTO) {
-        String hash = hashService.getHashSenha(authDTO.senha());
-
-        Usuario usuario = usuarioService.findByLoginAndSenha(authDTO.login(), hash);
+        Usuario usuario = new Usuario();
+        usuario = usuarioService
+                .findByLoginAndSenha(authDTO);
 
         if (usuario == null) {
+            usuario = usuarioService.findByEmailAndSenha(authDTO);
+            if (usuario == null) {
+                return Response.status(Status.NO_CONTENT)
+                        .entity("Usuario não encontrado").build();
+            }
+
+        } else if (!usuario.getAtivo()) {
             return Response.status(Status.NO_CONTENT)
-                    .entity("Usuario não encontrado").build();
+                    .entity("Usuario Inativo").build();
         }
         return Response.ok()
                 .header("Authorization", tokenService.generateJwt(usuario))

@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import k.dto.AuthUsuarioDTO;
 import k.dto.UsuarioDTO;
 import k.dto.UsuarioResponseDTO;
 import k.dto.UsuarioUpdateNomeGerenteDTO;
@@ -46,7 +47,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         try {
             LOG.info("Requisição Usuario.getAll()");
             return repository.findAll().stream()
-                    .map(usuario -> new UsuarioResponseDTO(usuario)).collect(Collectors.toList());
+                    .map(UsuarioResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Usuario.getAll()");
@@ -61,7 +62,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             return repository.findByNome(nome).stream()
                     .filter(usuario -> usuario.getEmpresa().getId() == usuarioLogadoService.getPerfilUsuarioLogado()
                             .getEmpresa().getId())
-                    .map(usuario -> new UsuarioResponseDTO(usuario)).collect(Collectors.toList());
+                    .map(UsuarioResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Usuario.getAll()");
@@ -70,10 +71,22 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario findByLoginAndSenha(String login, String senha) {
+    public Usuario findByLoginAndSenha(AuthUsuarioDTO auth) {
         try {
             LOG.info("Requisição Usuario.findByLoginAndSenha()");
-            return repository.findByLoginAndSenha(login, senha);
+            return repository.findByLoginAndSenha(auth.login(), hash.getHashSenha(auth.senha()));
+
+        } catch (Exception e) {
+            LOG.error("Erro ao rodar Requisição Usuario.findByLoginAndSenha()");
+            return null;
+        }
+    }
+
+    @Override
+    public Usuario findByEmailAndSenha(AuthUsuarioDTO auth) {
+        try {
+            LOG.info("Requisição Usuario.findByLoginAndSenha()");
+            return repository.findByEmailAndSenha(auth.login(), hash.getHashSenha(auth.senha()));
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Usuario.findByLoginAndSenha()");
@@ -154,7 +167,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             LOG.info("Requisição Usuario.getFuncionarios()");
             return repository.findAll().stream().filter(
                     usuario -> usuario.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa())
-                    .map(usuario -> new UsuarioResponseDTO(usuario)).collect(Collectors.toList());
+                    .map(UsuarioResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição UsuariogetFuncionarios()");
