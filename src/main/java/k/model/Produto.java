@@ -21,9 +21,29 @@ public class Produto extends EntityClass {
     @Column(name = "valor_venda")
     private Double valorVenda;
 
+    private String descricao;
+
+    private String linkimage;
+
     @ManyToOne
     @JoinColumn(name = "tipoproduto_produto")
     private TipoProduto tipoProduto;
+
+    public String getLinkimage() {
+        return linkimage;
+    }
+
+    public void setLinkimage(String linkimage) {
+        this.linkimage = linkimage;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
     public TipoProduto getTipoProduto() {
         return tipoProduto;

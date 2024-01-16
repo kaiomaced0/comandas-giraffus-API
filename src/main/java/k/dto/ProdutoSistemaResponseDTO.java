@@ -5,8 +5,9 @@ import k.model.Produto;
 public record ProdutoSistemaResponseDTO(
         Long id,
         String nome,
-        Double valorCompra,
-        Double valorVenda,
+        String descricao,
+        Double custo,
+        Double valor,
         Integer estoque) {
 
     public ProdutoSistemaResponseDTO(Produto produto) {
@@ -14,6 +15,7 @@ public record ProdutoSistemaResponseDTO(
         this(
                 produto.getId(),
                 produto.getNome(),
+                produto.getDescricao(),
                 produto.getValorCompra(),
                 produto.getValorVenda(),
                 produto.getEstoque());

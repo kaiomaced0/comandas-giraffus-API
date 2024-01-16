@@ -11,6 +11,7 @@ import k.dto.ProdutoAdicionaRetiraDTO;
 import k.dto.ProdutoDTO;
 import k.dto.ProdutoResponseDTO;
 import k.model.Produto;
+import k.model.TipoProduto;
 import k.repository.EmpresaRepository;
 import k.repository.ProdutoRepository;
 import k.repository.TipoProdutoRepository;
@@ -85,11 +86,26 @@ public class ProdutoServiceImpl implements ProdutoService {
         Produto p = repository.findById(idProduto);
         try {
             if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
-                p.setNome(produtoDTO.nome());
-                p.setValorCompra(produtoDTO.valorCompra());
-                p.setValorVenda(produtoDTO.valorVenda());
-                p.setEstoque(produtoDTO.estoque());
-                p.setTipoProduto(tipoProdutoRepository.findById(produtoDTO.idTipoProduto()));
+                if(produtoDTO.nome() != null){
+                    p.setNome(produtoDTO.nome());
+                }
+                if(produtoDTO.descricao() != null){
+                    p.setDescricao(produtoDTO.descricao());
+                }
+                if(produtoDTO.custo() != null){
+                    p.setValorCompra(produtoDTO.custo());
+                }
+                if(produtoDTO.valor() != null){
+                    p.setValorVenda(produtoDTO.valor());
+                }
+                if(produtoDTO.estoque() != null){
+                    p.setEstoque(produtoDTO.estoque());
+                }
+                TipoProduto t = new TipoProduto();
+                t = tipoProdutoRepository.findById(produtoDTO.idTipoProduto());
+                if(t != null){
+                    p.setTipoProduto(t);
+                }
                 
                 return Response.ok(new ProdutoResponseDTO(p)).build();
             } else {
