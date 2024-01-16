@@ -45,12 +45,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<UsuarioResponseDTO> getAll() {
         try {
-            LOG.info("Requisição Usuario.getAll()");
+            LOG.info("Requisicao Usuario.getAll()");
             return repository.findAll().stream()
                     .map(UsuarioResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.getAll()");
+            LOG.error("Erro ao rodar Requisicao Usuario.getAll()");
             return null;
         }
     }
@@ -58,14 +58,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<UsuarioResponseDTO> getNome(String nome) {
         try {
-            LOG.info("Requisição Usuario.getAll()");
+            LOG.info("Requisicao Usuario.getAll()");
             return repository.findByNome(nome).stream()
                     .filter(usuario -> usuario.getEmpresa().getId() == usuarioLogadoService.getPerfilUsuarioLogado()
                             .getEmpresa().getId())
                     .map(UsuarioResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.getAll()");
+            LOG.error("Erro ao rodar Requisicao Usuario.getAll()");
             return null;
         }
     }
@@ -73,11 +73,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario findByLoginAndSenha(AuthUsuarioDTO auth) {
         try {
-            LOG.info("Requisição Usuario.findByLoginAndSenha()");
+            LOG.info("Requisicao Usuario.findByLoginAndSenha()");
             return repository.findByLoginAndSenha(auth.login(), hash.getHashSenha(auth.senha()));
 
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.findByLoginAndSenha()");
+            LOG.error("Erro ao rodar Requisicao Usuario.findByLoginAndSenha()");
             return null;
         }
     }
@@ -85,11 +85,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario findByEmailAndSenha(AuthUsuarioDTO auth) {
         try {
-            LOG.info("Requisição Usuario.findByLoginAndSenha()");
+            LOG.info("Requisicao Usuario.findByLoginAndSenha()");
             return repository.findByEmailAndSenha(auth.login(), hash.getHashSenha(auth.senha()));
 
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.findByLoginAndSenha()");
+            LOG.error("Erro ao rodar Requisicao Usuario.findByLoginAndSenha()");
             return null;
         }
     }
@@ -99,14 +99,14 @@ public class UsuarioServiceImpl implements UsuarioService {
         try {
             Usuario u = repository.findById(id);
             if (u.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa()) {
-                LOG.info("Requisição Usuario.getId()");
+                LOG.info("Requisicao Usuario.getId()");
                 return new UsuarioResponseDTO(u);
             } else {
                 throw new Exception();
             }
 
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.getId()");
+            LOG.error("Erro ao rodar Requisicao Usuario.getId()");
             return null;
         }
     }
@@ -122,10 +122,10 @@ public class UsuarioServiceImpl implements UsuarioService {
             entity.getPerfis().add(Perfil.valueOf(usuario.idPerfil()));
             repository.persist(entity);
 
-            LOG.info("Requisição Usuario.insert()");
+            LOG.info("Requisicao Usuario.insert()");
             return Response.ok(entity).build();
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.insert()");
+            LOG.error("Erro ao rodar Requisicao Usuario.insert()");
             return null;
         }
     }
@@ -141,7 +141,7 @@ public class UsuarioServiceImpl implements UsuarioService {
                         .getEmpresa().getAdmin().getId()) {
                     if (usuarioLogadoService.getPerfilUsuarioLogado().getId() != entity.getId()) {
                         repository.delete(entity);
-                        LOG.info("Requisição Usuario.delete()");
+                        LOG.info("Requisicao Usuario.delete()");
                         return Response.ok(new UsuarioResponseDTO(entity)).build();
                     } else {
                         throw new Exception();
@@ -154,7 +154,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
             }
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.delete()");
+            LOG.error("Erro ao rodar Requisicao Usuario.delete()");
             return Response.status(Status.STATUS_NO_TRANSACTION).build();
 
         }
@@ -164,13 +164,13 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<UsuarioResponseDTO> getFuncionarios() {
         try {
-            LOG.info("Requisição Usuario.getFuncionarios()");
+            LOG.info("Requisicao Usuario.getFuncionarios()");
             return repository.findAll().stream().filter(
                     usuario -> usuario.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa())
                     .map(UsuarioResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição UsuariogetFuncionarios()");
+            LOG.error("Erro ao rodar Requisicao UsuariogetFuncionarios()");
             return null;
         }
     }
@@ -179,12 +179,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     public Response updateNomeGerente(UsuarioUpdateNomeGerenteDTO usuarioUpdateNome) {
         try {
-            LOG.info("Requisição Usuario.updateNome()");
+            LOG.info("Requisicao Usuario.updateNome()");
             Usuario entity = repository.findById(usuarioUpdateNome.id());
             entity.setNome(usuarioUpdateNome.nome());
             return Response.ok(new UsuarioResponseDTO(entity)).build();
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.updateNome()");
+            LOG.error("Erro ao rodar Requisicao Usuario.updateNome()");
             return null;
         }
 
