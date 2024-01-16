@@ -10,6 +10,8 @@ import k.dto.CaixaResponseDTO;
 public interface CaixaService {
     public List<CaixaResponseDTO> getAll();
 
+    public List<CaixaResponseDTO> getAllFechadas();
+
     public CaixaResponseDTO getId(@PathParam("id") Long id);
 
     public Response insert(CaixaDTO caixa);
