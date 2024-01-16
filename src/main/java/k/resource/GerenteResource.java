@@ -22,7 +22,7 @@ public class GerenteResource {
     EmpresaService service;
 
     @PATCH
-    @Path("/adicionarfuncionario/{id}")
+    @Path("/funcionario/add/{id}")
     @RolesAllowed({ "Admin" })
     @Transactional
     public Response adicionarFuncionario(@PathParam("id") Long id) {
@@ -38,7 +38,7 @@ public class GerenteResource {
     }
 
     @PATCH
-    @Path("/removerfuncionario/{id}")
+    @Path("/funcionario/remove/{id}")
     @RolesAllowed({ "Admin" })
     @Transactional
     public Response removerFuncionario(@PathParam("id") Long id) {

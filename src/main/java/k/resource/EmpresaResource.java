@@ -34,7 +34,7 @@ public class EmpresaResource {
     }
 
     @GET
-    @Path("/inativas")
+    @Path("/off")
     @RolesAllowed({ "Master" })
     public List<EmpresaResponseDTO> getInativos() {
         return service.getAllInativos();
