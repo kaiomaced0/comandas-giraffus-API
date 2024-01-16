@@ -35,7 +35,7 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
                 .getTipoProdutos().stream()
                 .filter(tipoProduto -> usuarioLogadoService.getPerfilUsuarioLogado()
                         .getEmpresa().getTipoProdutos().contains(tipoProduto))
-                .map(tipoProduto -> new TipoProdutoResponseDTO(tipoProduto.getId(), tipoProduto.getNome()))
+                .map(tipoProduto -> new TipoProdutoResponseDTO(tipoProduto.getId(), tipoProduto.getNome(), tipoProduto.getCor()))
                 .collect(Collectors.toList());
     }
 
@@ -44,14 +44,14 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
         return repository.findByNome(nome).stream().filter(
                 tipoProduto -> usuarioLogadoService.getPerfilUsuarioLogado()
                         .getEmpresa().getTipoProdutos().contains(tipoProduto))
-                .map(tipoProduto -> new TipoProdutoResponseDTO(tipoProduto.getId(), tipoProduto.getNome()))
+                .map(tipoProduto -> new TipoProdutoResponseDTO(tipoProduto.getId(), tipoProduto.getNome(), tipoProduto.getCor()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public TipoProdutoResponseDTO getId(Long id) {
         TipoProduto entity = repository.findById(id);
-        return new TipoProdutoResponseDTO(entity.getId(), entity.getNome());
+        return new TipoProdutoResponseDTO(entity.getId(), entity.getNome(), entity.getCor());
     }
 
     @Override
@@ -60,7 +60,7 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
         TipoProduto entity = TipoProdutoDTO.criaTipoProduto(tipoProduto);
         usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getTipoProdutos().add(entity);
         repository.persist(entity);
-        return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome())).build();
+        return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome(), entity.getCor())).build();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
             TipoProduto entity = repository.findById(idTipoProduto);
             if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getTipoProdutos().contains(entity)) {
                 entity.setNome(tipoProduto.nome());
-                return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome())).build();
+                return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome(), entity.getCor())).build();
 
             } else {
                 throw new Exception();
@@ -86,7 +86,7 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
     public Response delete(Long id) {
         TipoProduto entity = repository.findById(id);
         entity.setAtivo(false);
-        return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome())).build();
+        return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome(), entity.getCor())).build();
     }
 
 }

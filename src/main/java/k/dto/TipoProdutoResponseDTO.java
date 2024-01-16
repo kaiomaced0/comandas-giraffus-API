@@ -2,6 +2,6 @@ package k.dto;
 
 public record TipoProdutoResponseDTO(
         Long id,
-        String nome) {
+        String nome, String cor) {
 
 }
