@@ -63,7 +63,7 @@ public class ProdutoResource {
     }
 
     @PATCH
-    @Path("/adicionarestoque/{id}")
+    @Path("/adicionarestoque")
     @RolesAllowed({ "Admin" })
     @Transactional
     public Response adicionarEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO) {
@@ -71,7 +71,7 @@ public class ProdutoResource {
     }
 
     @PATCH
-    @Path("/retirarestoque/{id}")
+    @Path("/retirarestoque")
     @RolesAllowed({ "Admin" })
     @Transactional
     public Response retirarEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO) {
