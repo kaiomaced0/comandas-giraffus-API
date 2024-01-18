@@ -37,31 +37,32 @@ public class UsuarioLogadoServiceImpl implements UsuarioLogadoService {
         Usuario entity = usuarioRepository.findById(getPerfilUsuarioLogado().getId());
         try {
             if (usuarioUpdateSenha.senhaAntiga() == entity.getSenha()) {
-                LOG.info("Requisição Usuario.updatupdateSenhaeNome()");
+                LOG.info("Requisicao Usuario.updatupdateSenhaeNome()");
                 entity.setSenha(usuarioUpdateSenha.novaSenha());
                 return Response.ok(new UsuarioResponseDTO(entity)).build();
             } else {
                 throw new Exception();
             }
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.updateSenha()");
+            LOG.error("Erro ao rodar Requisicao Usuario.updateSenha()");
             return Response.notModified().build();
         }
     }
 
+    @Override
     public Usuario getPerfilUsuarioLogado() {
 
         Usuario user = new Usuario();
         try {
-            LOG.info("Requisição UsuarioLogado.getPerfilUsuarioLogado()");
+            LOG.info("Requisicao UsuarioLogado.getPerfilUsuarioLogado()");
 
             String login = jsonWebToken.getSubject();
             user = usuarioRepository.findByLogin(login);
 
             return user;
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição UsuarioLogado.getPerfilUsuarioLogado()");
-            return user;
+            LOG.error("Erro ao rodar Requisicao UsuarioLogado.getPerfilUsuarioLogado()");
+            return null;
         }
 
     }
@@ -71,11 +72,11 @@ public class UsuarioLogadoServiceImpl implements UsuarioLogadoService {
     public Response updateLogin(UsuarioUpdateLoginDTO usuarioUpdateLoginDTO) {
         Usuario entity = usuarioRepository.findById(getPerfilUsuarioLogado().getId());
         try {
-            LOG.info("Requisição Usuario.updatupdateSenhaeNome()");
+            LOG.info("Requisicao Usuario.updatupdateSenhaeNome()");
             entity.setLogin(usuarioUpdateLoginDTO.login());
             return Response.ok(new UsuarioResponseDTO(entity)).build();
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.updateSenha()");
+            LOG.error("Erro ao rodar Requisicao Usuario.updateSenha()");
             return Response.notModified().build();
         }
     }
@@ -86,10 +87,10 @@ public class UsuarioLogadoServiceImpl implements UsuarioLogadoService {
         Usuario entity = usuarioRepository.findById(getPerfilUsuarioLogado().getId());
         try {
             entity.setEmail(usuarioUpdateEmailDTO.email());
-            LOG.info("Requisição Usuario.updateEmail()");
+            LOG.info("Requisicao Usuario.updateEmail()");
             return Response.ok(new UsuarioResponseDTO(entity)).build();
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Usuario.updateEmail()");
+            LOG.error("Erro ao rodar Requisicao Usuario.updateEmail()");
             return Response.notModified().build();
         }
     }
