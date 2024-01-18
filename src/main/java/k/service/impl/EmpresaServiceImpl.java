@@ -1,6 +1,8 @@
 package k.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
@@ -13,6 +15,7 @@ import k.dto.EmpresaUpdateNomeDTO;
 import k.dto.EmpresaUpdateNomeMasterDTO;
 import k.model.Empresa;
 import k.model.Perfil;
+import k.model.Usuario;
 import k.repository.EmpresaRepository;
 import k.repository.UsuarioRepository;
 import k.service.EmpresaService;
@@ -117,13 +120,6 @@ public class EmpresaServiceImpl implements EmpresaService {
         } catch (Exception e) {
             return Response.status(Status.STATUS_NO_TRANSACTION).build();
         }
-    }
-
-    @Override
-    @Transactional
-    public Response adicionarFuncionario(Long id) {
-        usuarioRepository.findById(id).setEmpresa(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa());
-        return Response.ok().build();
     }
 
     @Override

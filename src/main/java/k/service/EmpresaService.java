@@ -26,7 +26,6 @@ public interface EmpresaService {
 
     public Response updateNomeFantasiaMaster(EmpresaUpdateNomeMasterDTO empresaUpdateNomeDTO);
 
-    public Response adicionarFuncionario(Long id);
 
     public Response removerFuncionario(Long id);
 
