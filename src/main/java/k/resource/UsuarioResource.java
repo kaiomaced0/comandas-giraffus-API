@@ -29,13 +29,6 @@ public class UsuarioResource {
     @Inject
     UsuarioService service;
 
-    @RolesAllowed({ "Admin" })
-    @GET
-    @Path("/funcionarios")
-    public List<UsuarioResponseDTO> getFuncionario() {
-        return service.getFuncionarios();
-    }
-
     @RolesAllowed({ "Master" })
     @GET
     @Path("/todos")
@@ -71,20 +64,6 @@ public class UsuarioResource {
         return service.delete(id);
     }
 
-    @PATCH
-    @RolesAllowed({ "Admin" })
-    @Path("/update/usuarionome")
-    @Transactional
-    public Response updateNomeUsuario(UsuarioUpdateNomeGerenteDTO usuarioUpdateNomeGerenteDTO) {
-        return service.updateNomeGerente(usuarioUpdateNomeGerenteDTO);
-    }
 
-    @PATCH
-    @RolesAllowed({ "Admin" })
-    @Path("/update/usuarionome")
-    @Transactional
-    public Response updateSenhaUsuario(UsuarioUpdateSenhaGerenteDTO usuarioUpdateSenhaGerenteDTO) {
-        return service.updateSenhaGerente(usuarioUpdateSenhaGerenteDTO);
-    }
 
 }

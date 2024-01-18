@@ -27,6 +27,8 @@ public interface UsuarioService {
 
     public Response insert(UsuarioDTO usuario);
 
+    public Response insertFuncionario(UsuarioDTO usuario);
+
     public Response updateNomeGerente(UsuarioUpdateNomeGerenteDTO usuarioUpdateNome);
 
     public Response updateSenhaGerente(UsuarioUpdateSenhaGerenteDTO usuarioUpdateSenhaGerente);
