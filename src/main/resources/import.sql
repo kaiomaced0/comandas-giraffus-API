@@ -3,136 +3,136 @@
 INSERT INTO usuario (nome, email, login, senha, ativo )
 VALUES ('Administrador do Sitema', 'admin@gmail.com', 'admin', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('AnaSilva', 'AnaSilva@dominio.com', 'AnaSilva', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'AnaSilva', 'AnaSilva@dominio.com', 'AnaSilva', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('BrunoCastro', 'BrunoCastro@dominio.com', 'BrunoCastro', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'BrunoCastro', 'BrunoCastro@dominio.com', 'BrunoCastro', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('CarlaDias', 'CarlaDias@dominio.com', 'CarlaDias', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'CarlaDias', 'CarlaDias@dominio.com', 'CarlaDias', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('ZoeFernandes', 'ZoeFernandes@dominio.com', 'ZoeFernandes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'ZoeFernandes', 'ZoeFernandes@dominio.com', 'ZoeFernandes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 -- 1
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('LiamSantos', 'LiamSantos@dominio.com', 'LiamSantos', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'LiamSantos', 'LiamSantos@dominio.com', 'LiamSantos', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 2
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('OliviaPereira', 'OliviaPereira@dominio.com', 'OliviaPereira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'OliviaPereira', 'OliviaPereira@dominio.com', 'OliviaPereira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 3
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('NoahRodrigues', 'NoahRodrigues@dominio.com', 'NoahRodrigues', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'NoahRodrigues', 'NoahRodrigues@dominio.com', 'NoahRodrigues', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 4
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('EmmaFerreira', 'EmmaFerreira@dominio.com', 'EmmaFerreira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'EmmaFerreira', 'EmmaFerreira@dominio.com', 'EmmaFerreira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 5
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('IsabellaGomes', 'IsabellaGomes@dominio.com', 'IsabellaGomes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'IsabellaGomes', 'IsabellaGomes@dominio.com', 'IsabellaGomes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 6
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('SophiaMartins', 'SophiaMartins@dominio.com', 'SophiaMartins', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'SophiaMartins', 'SophiaMartins@dominio.com', 'SophiaMartins', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 7
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('AvaOliveira', 'AvaOliveira@dominio.com', 'AvaOliveira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'AvaOliveira', 'AvaOliveira@dominio.com', 'AvaOliveira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 8
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('CharlotteSousa', 'CharlotteSousa@dominio.com', 'CharlotteSousa', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'CharlotteSousa', 'CharlotteSousa@dominio.com', 'CharlotteSousa', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 9
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('MiaFernandes', 'MiaFernandes@dominio.com', 'MiaFernandes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'MiaFernandes', 'MiaFernandes@dominio.com', 'MiaFernandes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 10
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('AmeliaRibeiro', 'AmeliaRibeiro@dominio.com', 'AmeliaRibeiro', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'AmeliaRibeiro', 'AmeliaRibeiro@dominio.com', 'AmeliaRibeiro', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 11
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('HarperCarvalho', 'HarperCarvalho@dominio.com', 'HarperCarvalho', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'HarperCarvalho', 'HarperCarvalho@dominio.com', 'HarperCarvalho', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 12
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('EvelynAlves', 'EvelynAlves@dominio.com', 'EvelynAlves', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'EvelynAlves', 'EvelynAlves@dominio.com', 'EvelynAlves', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 13
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('LiamSantos', 'LiamSantos@dominio.com', 'LiamSantos', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'LiamSantos', 'LiamSantos@dominio.com', 'LiamSantos', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 14
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('JamesFreitas', 'JamesFreitas@dominio.com', 'JamesFreitas', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'JamesFreitas', 'JamesFreitas@dominio.com', 'JamesFreitas', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 15
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('BenjaminMendes', 'BenjaminMendes@dominio.com', 'BenjaminMendes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'BenjaminMendes', 'BenjaminMendes@dominio.com', 'BenjaminMendes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 16
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('ElijahAraujo', 'ElijahAraujo@dominio.com', 'ElijahAraujo', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'ElijahAraujo', 'ElijahAraujo@dominio.com', 'ElijahAraujo', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 17
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('LucasFerreira', 'LucasFerreira@dominio.com', 'LucasFerreira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'LucasFerreira', 'LucasFerreira@dominio.com', 'LucasFerreira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 18
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('AlexanderCorreia', 'AlexanderCorreia@dominio.com', 'AlexanderCorreia', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'AlexanderCorreia', 'AlexanderCorreia@dominio.com', 'AlexanderCorreia', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 19
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('DanielSousa', 'DanielSousa@dominio.com', 'DanielSousa', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'DanielSousa', 'DanielSousa@dominio.com', 'DanielSousa', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 20
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('LoganNascimento', 'LoganNascimento@dominio.com', 'LoganNascimento', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'LoganNascimento', 'LoganNascimento@dominio.com', 'LoganNascimento', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 21
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('SebastianRocha', 'SebastianRocha@dominio.com', 'SebastianRocha', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'SebastianRocha', 'SebastianRocha@dominio.com', 'SebastianRocha', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 22
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('MasonLima', 'MasonLima@dominio.com', 'MasonLima', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'MasonLima', 'MasonLima@dominio.com', 'MasonLima', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 23
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('EllaFerreira', 'EllaFerreira@dominio.com', 'EllaFerreira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'EllaFerreira', 'EllaFerreira@dominio.com', 'EllaFerreira', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 24
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('GraysonBarbosa', 'GraysonBarbosa@dominio.com', 'GraysonBarbosa', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'GraysonBarbosa', 'GraysonBarbosa@dominio.com', 'GraysonBarbosa', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 25
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('JackLopes', 'JackLopes@dominio.com', 'JackLopes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'JackLopes', 'JackLopes@dominio.com', 'JackLopes', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 26
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('LeviCardoso', 'LeviCardoso@dominio.com', 'LeviCardoso', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'LeviCardoso', 'LeviCardoso@dominio.com', 'LeviCardoso', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 27
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('MilaGarcia', 'MilaGarcia@dominio.com', 'MilaGarcia', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'MilaGarcia', 'MilaGarcia@dominio.com', 'MilaGarcia', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 28
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('AsherCosta', 'AsherCosta@dominio.com', 'AsherCosta', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'AsherCosta', 'AsherCosta@dominio.com', 'AsherCosta', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 29
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('LeoFonseca', 'LeoFonseca@dominio.com', 'LeoFonseca', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000000, 'LeoFonseca', 'LeoFonseca@dominio.com', 'LeoFonseca', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 -- 30
-INSERT INTO usuario (nome, email, login, senha, ativo)
-VALUES ('HazelPinto', 'HazelPinto@dominio.com', 'HazelPinto', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
+INSERT INTO usuario (cpf, nome, email, login, senha, ativo)
+VALUES (0000100, 'HazelPinto', 'HazelPinto@dominio.com', 'HazelPinto', 'Hri6s0kWIfVbxP6ggq8d1UQiLkC1rD/n2IuxOlhRAy97YapOUsljQ9dns/5Da8Egz0MksK8ndkldS15ITG6Rpw==', true);
 
 ------------------- setando admin -------------------------
 INSERT INTO perfil_usuario (id_usuario, perfil) VALUES ((SELECT usuario.id FROM usuario WHERE usuario.login = 'admin'), 0);
@@ -179,17 +179,17 @@ VALUES
     (8, 1),
     (9, 1),
     (10, 1),
-    (11, 1),
-    (12, 1),
-    (13, 1),
-    (14, 1),
-    (15, 1),
-    (16, 1),
-    (17, 1),
-    (18, 1),
-    (19, 1),
-    (20, 1),
-    (21, 1);
+    (11, 2),
+    (12, 2),
+    (13, 2),
+    (14, 2),
+    (15, 2),
+    (16, 2),
+    (17, 2),
+    (18, 2),
+    (19, 2),
+    (20, 2),
+    (21, 2);
 
 --------- adicionando produtos -------------
 
