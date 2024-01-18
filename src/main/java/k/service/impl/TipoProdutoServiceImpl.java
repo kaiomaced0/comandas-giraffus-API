@@ -16,6 +16,7 @@ import k.service.TipoProdutoService;
 import k.service.UsuarioLogadoService;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class TipoProdutoServiceImpl implements TipoProdutoService {
@@ -28,6 +29,7 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
 
     @Inject
     UsuarioLogadoService usuarioLogadoService;
+    public static final Logger LOG = Logger.getLogger(TipoProdutoServiceImpl.class);
 
     @Override
     public List<TipoProdutoResponseDTO> getAll() {
@@ -67,10 +69,11 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
     @Transactional
     public Response update(Long idTipoProduto, TipoProdutoDTO tipoProduto) {
         try {
-
+            LOG.info("Entrou no update tipoproduto nome:" +tipoProduto.nome() + "  cor:" + tipoProduto.cor() + " .");
             TipoProduto entity = repository.findById(idTipoProduto);
             if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getTipoProdutos().contains(entity)) {
                 entity.setNome(tipoProduto.nome());
+                entity.setCor(tipoProduto.cor());
                 return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome(), entity.getCor())).build();
 
             } else {
