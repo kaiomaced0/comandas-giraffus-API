@@ -132,6 +132,28 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
+    public Response insertFuncionario(UsuarioDTO usuario) {
+        try {
+            if(usuario.idPerfil() == 0){
+                throw new Exception("Perfil não aceito!");
+            }
+            Usuario entity = UsuarioDTO.criaUsuario(usuario);
+            entity.setSenha(hash.getHashSenha(usuario.senha()));
+            entity.setEmpresa(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa());
+            entity.setPerfis(new HashSet<Perfil>());
+            entity.getPerfis().add(Perfil.valueOf(usuario.idPerfil()));
+            repository.persist(entity);
+
+            LOG.info("Requisicao Usuario.insert()");
+            return Response.ok(entity).build();
+        } catch (Exception e) {
+            LOG.error("Erro ao rodar Requisicao Usuario.insert()");
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
+    @Override
+    @Transactional
     public Response delete(Long id) {
         try {
             Usuario entity = repository.findById(id);
@@ -163,14 +185,22 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<UsuarioResponseDTO> getFuncionarios() {
+        Usuario user = usuarioLogadoService.getPerfilUsuarioLogado();
         try {
             LOG.info("Requisicao Usuario.getFuncionarios()");
             return repository.findAll().stream().filter(
-                    usuario -> usuario.getEmpresa() == usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa())
+                    usuario -> {
+                        if(usuario.getEmpresa() != null){
+                            if (usuario.getEmpresa().getId() == user.getEmpresa().getId()){
+                                return true;
+                            }
+                        }
+                        return false;
+                    })
                     .map(UsuarioResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisicao UsuariogetFuncionarios()");
+            LOG.error("Erro ao rodar Requisicao UsuariogetFuncionarios() " + e.getMessage());
             return null;
         }
     }
@@ -197,7 +227,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             Usuario entity = repository.findById(usuarioUpdateSenhaGerente.idUsuario());
             if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa() == entity.getEmpresa()) {
 
-                entity.setSenha(usuarioUpdateSenhaGerente.senha());
+                entity.setSenha(hash.getHashSenha(usuarioUpdateSenhaGerente.senha()));
                 return Response.ok().build();
             } else {
                 throw new Exception();
