@@ -7,7 +7,6 @@ public record UsuarioDTO(
         String login,
         String senha,
         String cpf,
-        Long idEmpresa,
         Integer idPerfil) {
     public static Usuario criaUsuario(UsuarioDTO usuarioDTO) {
         Usuario entity = new Usuario();

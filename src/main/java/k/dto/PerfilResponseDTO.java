@@ -1,7 +1,7 @@
 package k.dto;
 
 public record PerfilResponseDTO(
-        int id,
+        Integer id,
         String nome) {
 
 }

@@ -7,6 +7,7 @@ public record ProdutoResponseDTO(
         String nome,
         String descricao,
         String linkimage,
+        Double custo,
         Double valor,
         Integer estoque) {
 
@@ -15,6 +16,7 @@ public record ProdutoResponseDTO(
                 produto.getNome(),
                 produto.getDescricao(),
                 produto.getLinkimage(),
+                produto.getValorCompra(),
                 produto.getValorVenda(),
                 produto.getEstoque());
     }
