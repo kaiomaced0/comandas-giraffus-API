@@ -8,21 +8,14 @@ import k.model.Caixa;
 
 public record CaixaResponseDTO(
                 String nome,
-                List<Long> idComandas,
-                List<Long> idPagamentos,
                 double valorTotal,
-                LocalDate dataCaixa,
                 String comentario,
-                boolean fechado
+                Boolean fechado
 
 ) {
         public CaixaResponseDTO(Caixa caixa) {
                 this(caixa.getNome(),
-                                caixa.getComandas().stream().map(comanda -> comanda.getId())
-                                                .collect(Collectors.toList()),
-                                caixa.getPagamentos().stream().map(pagamento -> pagamento.getId())
-                                                .collect(Collectors.toList()),
-                                caixa.getValorTotal(), caixa.getDataCaixa(), caixa.getComentario(),
+                                caixa.getValorTotal(), caixa.getComentario(),
                                 caixa.getFechado());
         }
 
