@@ -2,6 +2,7 @@ package k.resource;
 
 import java.util.List;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -37,6 +38,13 @@ public class CaixaResource {
     @Path("/{id}")
     public CaixaResponseDTO getId(@PathParam("id") Long id) {
         return service.getId(id);
+    }
+
+    @GET
+    @PermitAll
+    @Path("/atual")
+    public CaixaResponseDTO getId() {
+        return service.getCaixaAtual();
     }
 
     @POST

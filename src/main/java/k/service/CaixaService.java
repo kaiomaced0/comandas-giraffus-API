@@ -9,6 +9,7 @@ import k.dto.CaixaResponseDTO;
 
 public interface CaixaService {
     public List<CaixaResponseDTO> getAll();
+    public CaixaResponseDTO getCaixaAtual();
 
     public List<CaixaResponseDTO> getAllFechadas();
 

@@ -57,6 +57,21 @@ public class CaixaServiceImpl implements CaixaService {
     }
 
     @Override
+    public CaixaResponseDTO getCaixaAtual() {
+        try {
+            LOG.info("Requisição Caixa.getAll()");
+            return new CaixaResponseDTO(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixaAtual());
+
+        } catch (
+
+                Exception e) {
+            LOG.error("Erro ao rodar Requisição Caixa.getAll()");
+            return null;
+        }
+
+    }
+
+    @Override
     public List<CaixaResponseDTO> getAllFechadas() {
         try {
             LOG.info("Requisição Caixa.getAll()");
