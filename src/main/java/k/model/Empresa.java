@@ -44,7 +44,19 @@ public class Empresa extends EntityClass {
     @JoinColumn(name = "lista_comanda_empresa")
     private List<Comanda> comandas;
 
+    @OneToOne
+    @JoinColumn(name = "caixa_atual")
+    private Caixa caixaAtual;
+
     private String comentario;
+
+    public Caixa getCaixaAtual() {
+        return caixaAtual;
+    }
+
+    public void setCaixaAtual(Caixa caixaAtual) {
+        this.caixaAtual = caixaAtual;
+    }
 
     public String getComentario() {
         return comentario;

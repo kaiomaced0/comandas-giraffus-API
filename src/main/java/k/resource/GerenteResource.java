@@ -23,6 +23,9 @@ public class GerenteResource {
     @Inject
     UsuarioService usuarioService;
 
+    @Inject
+    EmpresaService empresaService;
+
     @POST
     @Path("/funcionario/add")
     @RolesAllowed({ "Admin" })
@@ -37,6 +40,14 @@ public class GerenteResource {
     @Transactional
     public Response updateNomeUsuario(UsuarioUpdateNomeGerenteDTO usuarioUpdateNomeGerenteDTO) {
         return usuarioService.updateNomeGerente(usuarioUpdateNomeGerenteDTO);
+    }
+
+    @PATCH
+    @RolesAllowed({ "Admin" })
+    @Path("/caixa/{id}")
+    @Transactional
+    public Response updateCaixaAtual(@PathParam("id") Long id) {
+        return empresaService.updateCaixaAtual(id);
     }
 
     @PATCH

@@ -13,9 +13,11 @@ import k.dto.EmpresaDTO;
 import k.dto.EmpresaResponseDTO;
 import k.dto.EmpresaUpdateNomeDTO;
 import k.dto.EmpresaUpdateNomeMasterDTO;
+import k.model.Caixa;
 import k.model.Empresa;
 import k.model.Perfil;
 import k.model.Usuario;
+import k.repository.CaixaRepository;
 import k.repository.EmpresaRepository;
 import k.repository.UsuarioRepository;
 import k.service.EmpresaService;
@@ -34,6 +36,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     @Inject
     UsuarioRepository usuarioRepository;
+
+    @Inject
+    CaixaRepository caixaRepository;
 
     @Override
     public List<EmpresaResponseDTO> getAll() {
@@ -78,6 +83,21 @@ public class EmpresaServiceImpl implements EmpresaService {
             return null;
         }
     }
+
+    @Override
+    public Response updateCaixaAtual(Long id) {
+        try {
+
+            Caixa cx = caixaRepository.findById(id);
+            Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
+            u.getEmpresa().setCaixaAtual(cx);
+            return Response.ok().build();
+        }catch (Exception e){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+    }
+
 
     @Override
     public EmpresaResponseDTO getId(Long id) {
