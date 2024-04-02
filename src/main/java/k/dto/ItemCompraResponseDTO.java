@@ -8,7 +8,7 @@ public record ItemCompraResponseDTO(
         String nome,
         @NotBlank Integer quantidade,
         Double preco) {
-    ItemCompraResponseDTO(ItemCompra i) {
+    public ItemCompraResponseDTO(ItemCompra i) {
         this(i.getProduto().getId(), i.getProduto().getNome(), i.getQuantidade(), i.getPreco());
     }
 

@@ -9,3 +9,4 @@ Welcome to the Comanda Management API, specifically designed for the dynamic nee
 - **Employee Management**: Assign roles and permissions to your staff, from kitchen crew to servers, ensuring smooth operation and security.
 - **Financial Transactions**: Simplified billing, payment processing, and tracking of daily sales to maintain financial clarity and efficiency.
 - **Access Control**: Role-based access ensures that staff can only interact with parts of the system relevant to their duties, enhancing operational security and efficiency.
+

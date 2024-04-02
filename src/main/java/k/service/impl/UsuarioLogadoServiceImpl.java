@@ -68,6 +68,17 @@ public class UsuarioLogadoServiceImpl implements UsuarioLogadoService {
     }
 
     @Override
+    public Response getPerfilUsuarioLogadoResponse() {
+
+        try {
+                return Response.ok(new UsuarioResponseDTO(getPerfilUsuarioLogado())).build();
+        } catch (Exception e) {
+            return Response.status(400).build();
+        }
+
+    }
+
+    @Override
     @Transactional
     public Response updateLogin(UsuarioUpdateLoginDTO usuarioUpdateLoginDTO) {
         Usuario entity = usuarioRepository.findById(getPerfilUsuarioLogado().getId());

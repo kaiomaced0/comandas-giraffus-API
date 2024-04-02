@@ -8,6 +8,7 @@ public record ComandaDTO(
         Comanda p = new Comanda();
         p.setNome(comandaDTO.nome);
         p.setPreco(0.0);
+        p.setFinalizada(false);
         return p;
     }
 

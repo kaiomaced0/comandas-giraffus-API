@@ -1,9 +1,12 @@
 package k.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import k.model.Empresa;
+import k.dto.CaixaDTO;
+import k.model.*;
+import k.service.CaixaService;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
@@ -13,9 +16,6 @@ import jakarta.ws.rs.core.Response;
 import k.dto.ComandaDTO;
 import k.dto.ComandaPagarDTO;
 import k.dto.ComandaResponseDTO;
-import k.model.Comanda;
-import k.model.ItemCompra;
-import k.model.Pedido;
 import k.repository.ComandaRepository;
 import k.repository.EmpresaRepository;
 import k.repository.PagamentoRepository;
@@ -41,13 +41,16 @@ public class ComandaServiceImpl implements ComandaService {
     @Inject
     EmpresaRepository empresaRepository;
 
+    @Inject
+    CaixaService caixaService;
+
     @Override
     public List<ComandaResponseDTO> getAll() {
         try {
             LOG.info("Requisição Comandas.getAll()");
             return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().stream()
-                    .filter(comandas -> comandas.getAtivo())
-                    .map(comandas -> new ComandaResponseDTO(comandas)).collect(Collectors.toList());
+                    .filter(EntityClass::getAtivo)
+                    .map(ComandaResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Comandas.getAll()");
@@ -56,10 +59,15 @@ public class ComandaServiceImpl implements ComandaService {
     }
 
     @Override
-    public ComandaResponseDTO getNome(String nome) {
+    public List<ComandaResponseDTO> getNome(String nome) {
         try {
-            return new ComandaResponseDTO(repository.findByNome(nome));
+            LOG.info("Requisição Comandas.getAll()");
+            return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().stream()
+                    .filter(EntityClass::getAtivo).filter(comanda -> comanda.getNome().contains(nome))
+                    .map(ComandaResponseDTO::new).collect(Collectors.toList());
+
         } catch (Exception e) {
+            LOG.error("Erro ao rodar Requisição Comandas.getAll()");
             return null;
         }
     }
@@ -77,16 +85,22 @@ public class ComandaServiceImpl implements ComandaService {
     @Override
     @Transactional
     public Response insert(ComandaDTO comanda) {
+        Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
         try {
+            if(u.getEmpresa().getCaixaAtual() == null){
+                throw new Exception("Caixa atual não existe!");
+            }
             Comanda entity = ComandaDTO.criaComanda(comanda);
-            entity.setAtendente(usuarioLogadoService.getPerfilUsuarioLogado());
-            Empresa e = empresaRepository.findById(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId());
-            e.getComandas().add(entity);
-            empresaRepository.persist(e);
+            entity.setAtendente(u);
+            entity.setPedidos(new ArrayList<>());
             repository.persist(entity);
-            return Response.ok().build();
+            u.getEmpresa().getCaixaAtual().getComandas().add(entity);
+            u.getEmpresa().getComandas().add(entity);
+            LOG.info("Requisição Comandas.insert() - ok");
+            return Response.ok().entity(new ComandaResponseDTO(entity)).build();
         } catch (Exception e) {
-            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+            LOG.error("Requisição Comandas.insert() falhou");
+            return Response.status(400).entity(e.getMessage()).build();
         }
 
     }
@@ -99,10 +113,8 @@ public class ComandaServiceImpl implements ComandaService {
             Comanda comanda = repository.findById(id);
             comanda.setPreco(0.0);
             for (Pedido p : comanda.getPedidos()) {
-                if (p.getAtivo() == true) {
-                    for (ItemCompra i : p.getItemCompras()) {
-                        comanda.setPreco(comanda.getPreco() + i.getPreco());
-                    }
+                if (p.getAtivo()) {
+                    comanda.setPreco(comanda.getPreco() + p.getValor());
                 }
             }
             return Response.ok(new ComandaResponseDTO(comanda)).build();
@@ -139,8 +151,8 @@ public class ComandaServiceImpl implements ComandaService {
         try {
             LOG.info("Requisição Comandas.getEmAberto()");
             return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().stream()
-                    .filter(comandas -> !comandas.getFinalizada()).filter(comandas -> comandas.getAtivo())
-                    .map(comandas -> new ComandaResponseDTO(comandas)).collect(Collectors.toList());
+                    .filter(comandas -> !comandas.getFinalizada()).filter(EntityClass::getAtivo)
+                    .map(ComandaResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Comandas.getEmAberto()");

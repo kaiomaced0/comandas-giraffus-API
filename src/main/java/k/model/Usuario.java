@@ -26,7 +26,7 @@ public class Usuario extends EntityClass {
 
     private String senha;
 
-    @Size(min = 11, max = 11)
+    @Size(min = 0, max = 11)
     private String cpf;
 
     @ManyToOne

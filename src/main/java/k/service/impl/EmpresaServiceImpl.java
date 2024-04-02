@@ -89,8 +89,8 @@ public class EmpresaServiceImpl implements EmpresaService {
         try {
 
             Caixa cx = caixaRepository.findById(id);
-            Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
-            u.getEmpresa().setCaixaAtual(cx);
+            Empresa e = usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa();
+            e.setCaixaAtual(cx);
             return Response.ok().build();
         }catch (Exception e){
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -145,8 +145,16 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Override
     @Transactional
     public Response removerFuncionario(Long id) {
-        usuarioRepository.findById(id).setEmpresa(null);
-        return Response.ok().build();
+        try {
+            if(usuarioLogadoService.getPerfilUsuarioLogado().getId() == id){
+                throw new Exception("Não pode se excluir!");
+            }
+            usuarioRepository.findById(id).setEmpresa(null);
+            return Response.ok().build();
+
+        }catch (Exception e){
+            return Response.status(400).entity(e.getMessage()).build();
+        }
 
     }
 

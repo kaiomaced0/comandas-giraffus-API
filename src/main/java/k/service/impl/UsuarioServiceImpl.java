@@ -189,14 +189,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         try {
             LOG.info("Requisicao Usuario.getFuncionarios()");
             return repository.findAll().stream().filter(
-                    usuario -> {
-                        if(usuario.getEmpresa() != null){
-                            if (usuario.getEmpresa().getId() == user.getEmpresa().getId()){
-                                return true;
-                            }
-                        }
-                        return false;
-                    })
+                    usuario -> user.getEmpresa() == usuario.getEmpresa())
                     .map(UsuarioResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {

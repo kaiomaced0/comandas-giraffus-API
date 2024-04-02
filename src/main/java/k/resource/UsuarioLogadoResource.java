@@ -11,7 +11,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import k.dto.UsuarioResponseDTO;
 import k.dto.UsuarioUpdateEmailDTO;
 import k.dto.UsuarioUpdateLoginDTO;
 import k.dto.UsuarioUpdateSenhaDTO;
@@ -27,9 +26,8 @@ public class UsuarioLogadoResource {
 
     @PermitAll
     @GET
-    public UsuarioResponseDTO getPerfilUsuarioLogado() {
-
-        return new UsuarioResponseDTO(service.getPerfilUsuarioLogado());
+    public Response getPerfilUsuarioLogado() {
+        return service.getPerfilUsuarioLogadoResponse();
 
     }
 

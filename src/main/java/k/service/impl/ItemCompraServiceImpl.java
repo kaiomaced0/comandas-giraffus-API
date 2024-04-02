@@ -48,7 +48,7 @@ public class ItemCompraServiceImpl implements ItemCompraService {
 
     @Override
     @Transactional
-    public Response insert(ItemCompraDTO itemCompraDTO) {
+    public ItemCompra insert(ItemCompraDTO itemCompraDTO) {
         try {
             Produto p = produtoRepository.findById(itemCompraDTO.produtoId());
             if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
@@ -58,12 +58,12 @@ public class ItemCompraServiceImpl implements ItemCompraService {
                 itemCompra.setQuantidade(itemCompraDTO.quantidade());
                 itemCompra.setPreco(itemCompra.getProduto().getValorVenda() * itemCompra.getQuantidade());
                 repository.persist(itemCompra);
-                return Response.ok().build();
+                return itemCompra;
             } else {
                 throw new Exception();
             }
         } catch (Exception e) {
-            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+            return null;
         }
 
     }

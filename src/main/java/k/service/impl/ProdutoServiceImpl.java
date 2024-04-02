@@ -10,8 +10,10 @@ import jakarta.ws.rs.core.Response;
 import k.dto.ProdutoAdicionaRetiraDTO;
 import k.dto.ProdutoDTO;
 import k.dto.ProdutoResponseDTO;
+import k.model.EntityClass;
 import k.model.Produto;
 import k.model.TipoProduto;
+import k.model.Usuario;
 import k.repository.EmpresaRepository;
 import k.repository.ProdutoRepository;
 import k.repository.TipoProdutoRepository;
@@ -37,19 +39,19 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public List<ProdutoResponseDTO> getAll() {
-        return repository.listAll().stream()
-                .filter(produto -> usuarioLogadoService.getPerfilUsuarioLogado()
-                        .getEmpresa().getProdutos().contains(produto))
-                .map(produto -> new ProdutoResponseDTO(produto))
+        Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
+        return u.getEmpresa().getProdutos().stream().filter(EntityClass::getAtivo)
+                .map(ProdutoResponseDTO::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ProdutoResponseDTO> getNome(String nome) {
+        Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
         return repository.findByNome(nome).stream()
-                .filter(produto -> usuarioLogadoService.getPerfilUsuarioLogado()
-                        .getEmpresa().getProdutos().contains(produto))
-                .map(produto -> new ProdutoResponseDTO(produto))
+                .filter(produto -> u.getEmpresa().getProdutos().contains(produto))
+                .filter(EntityClass::getAtivo)
+                .map(ProdutoResponseDTO::new)
                 .collect(Collectors.toList());
     }
 
@@ -57,7 +59,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     public Response getId(Long id) {
         Produto p = repository.findById(id);
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
+            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p) && p.getAtivo()) {
                 return Response.ok(new ProdutoResponseDTO(p)).build();
             } else {
                 throw new Exception();

@@ -12,6 +12,8 @@ public class Pedido extends EntityClass {
     @JoinColumn(name = "lista_itemcompra_pedido")
     private List<ItemCompra> itemCompras;
 
+    private Double valor;
+
     private String observacao;
 
     @Column(name = "status_pedido")
@@ -21,6 +23,14 @@ public class Pedido extends EntityClass {
 
     @ManyToOne
     private Comanda comanda;
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
 
     public Comanda getComanda() {
         return comanda;

@@ -23,14 +23,6 @@ public class ItemCompraResource {
     @Inject
     ItemCompraService service;
 
-    @POST
-    @RolesAllowed({ "Master", "Admin", "Garcom", "Caixa" })
-    @Transactional
-    public Response insert(ItemCompraDTO itemCompraDTO) {
-        return service.insert(itemCompraDTO);
-
-    }
-
     @PUT
     @Path("/update")
     @RolesAllowed({ "Master", "Admin", "Garcom", "Caixa" })

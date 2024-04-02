@@ -10,9 +10,7 @@ import jakarta.ws.rs.core.Response;
 import k.dto.PagamentoDTO;
 import k.dto.PagamentoDeleteDTO;
 import k.dto.PagamentoResponseDTO;
-import k.model.FormaPagamento;
-import k.model.Pagamento;
-import k.model.PagamentoRemovidoHistorico;
+import k.model.*;
 import k.repository.ComandaRepository;
 import k.repository.PagamentoRemovidoHistoricoRepository;
 import k.repository.PagamentoRepository;
@@ -45,7 +43,7 @@ public class PagamentoServiceImpl implements PagamentoService {
         return repository.findAll().stream()
                 .filter(pagamento -> pagamento.getUsuarioCaixa().getEmpresa() == usuarioLogadoService
                         .getPerfilUsuarioLogado().getEmpresa())
-                .filter(pagamento -> pagamento.getAtivo() == true)
+                .filter(EntityClass::getAtivo)
                 .map(pagamento -> new PagamentoResponseDTO(pagamento.getComanda().getId(),
                         pagamento.getPagamentoRealizado(), pagamento.getFormaPagamento(),
                         pagamento.getUsuarioCaixa().getId(),
@@ -64,7 +62,11 @@ public class PagamentoServiceImpl implements PagamentoService {
     @Override
     @Transactional
     public Response insert(PagamentoDTO pagamentoDTO) {
+        Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
         try {
+            if(u.getEmpresa().getCaixaAtual() == null){
+                throw new Exception("Caixa atual não existe!");
+            }
             Pagamento entity = new Pagamento();
             entity.setComanda(comandaRepository.findById(pagamentoDTO.idComanda()));
             entity.setFormaPagamento(FormaPagamento.valueOf(pagamentoDTO.idFormaPagamento()));
@@ -76,12 +78,13 @@ public class PagamentoServiceImpl implements PagamentoService {
             entity.setPagamentoRealizado(true);
             entity.getComanda().setFinalizada(true);
             entity.setValorGorjeta(entity.getComanda().getPreco() - entity.getValorPagamento());
-            if (entity.getValorGorjeta() > entity.getValorPagamento() * 0.01) {
-                entity.getComanda().setTaxaServico(true);
-            }
+//            if (entity.getValorGorjeta() > entity.getValorPagamento() * 0.01) {
+//                entity.getComanda().setTaxaServico(true);
+//            } **  Meio sem sentido, excluir  **
+            repository.persist(entity);
             return Response.ok().build();
         } catch (Exception e) {
-            return Response.status(Status.STATUS_NO_TRANSACTION).build();
+            return Response.status(Status.STATUS_NO_TRANSACTION).entity(e).build();
         }
 
     }

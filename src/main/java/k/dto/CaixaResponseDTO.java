@@ -7,14 +7,15 @@ import java.util.stream.Collectors;
 import k.model.Caixa;
 
 public record CaixaResponseDTO(
+                Long id,
                 String nome,
-                double valorTotal,
+                Double valorTotal,
                 String comentario,
                 Boolean fechado
 
 ) {
         public CaixaResponseDTO(Caixa caixa) {
-                this(caixa.getNome(),
+                this(           caixa.getId(), caixa.getNome(),
                                 caixa.getValorTotal(), caixa.getComentario(),
                                 caixa.getFechado());
         }

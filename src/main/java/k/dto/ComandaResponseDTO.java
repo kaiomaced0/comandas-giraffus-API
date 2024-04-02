@@ -6,15 +6,16 @@ import java.util.stream.Collectors;
 import k.model.Comanda;
 
 public record ComandaResponseDTO(
+        Long id,
         String nome,
-        List<Long> idPedidos,
+        List<PedidoResponseDTO> pedidos,
         Double preco,
         Long idAtendente,
         Boolean finalizada) {
 
     public ComandaResponseDTO(Comanda comanda) {
-        this(comanda.getNome(),
-                comanda.getPedidos().stream().map(pedido -> pedido.getId()).collect(Collectors.toList()),
+        this(comanda.getId(), comanda.getNome(),
+                comanda.getPedidos().stream().map(PedidoResponseDTO::new).collect(Collectors.toList()),
                 comanda.getPreco(), comanda.getAtendente().getId(), comanda.getFinalizada());
     }
 

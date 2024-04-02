@@ -1,6 +1,7 @@
 package k.service;
 
 import jakarta.ws.rs.core.Response;
+import k.dto.UsuarioResponseDTO;
 import k.dto.UsuarioUpdateEmailDTO;
 import k.dto.UsuarioUpdateLoginDTO;
 import k.dto.UsuarioUpdateSenhaDTO;
@@ -8,6 +9,8 @@ import k.model.Usuario;
 
 public interface UsuarioLogadoService {
     public Usuario getPerfilUsuarioLogado();
+
+    public Response getPerfilUsuarioLogadoResponse();
 
     public Response updateSenha(UsuarioUpdateSenhaDTO usuarioUpdateSenha);
 

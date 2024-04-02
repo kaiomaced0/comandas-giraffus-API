@@ -15,7 +15,7 @@ public interface ComandaService {
 
     public List<ComandaResponseDTO> getAllComandasAdm(Long idEmpresa);
 
-    public ComandaResponseDTO getNome(@PathParam("nome") String nome);
+    public List<ComandaResponseDTO> getNome(@PathParam("nome") String nome);
 
     public ComandaResponseDTO getId(@PathParam("id") Long id);
 

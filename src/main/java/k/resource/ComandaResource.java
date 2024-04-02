@@ -49,7 +49,7 @@ public class ComandaResource {
     @GET
     @Path("/nome/{nome}")
     @RolesAllowed({ "Admin", "Caixa", "Garcom", "Cozinha" })
-    public ComandaResponseDTO getNome(@PathParam("nome") String nome) {
+    public List<ComandaResponseDTO> getNome(@PathParam("nome") String nome) {
         return service.getNome(nome);
     }
 

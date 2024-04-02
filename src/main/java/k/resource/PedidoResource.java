@@ -15,8 +15,9 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import k.dto.PedidoAdicionaRemoveDTO;
+import k.dto.PedidoAdicionaItemCompraDTO;
 import k.dto.PedidoDTO;
+import k.dto.PedidoRemoveItemCompraDTO;
 import k.dto.PedidoResponseDTO;
 import k.service.PedidoService;
 
@@ -58,14 +59,14 @@ public class PedidoResource {
     @PUT
     @RolesAllowed({ "Admin", "Caixa", "Garcom" })
     @Transactional
-    public Response removeItemCompra(PedidoAdicionaRemoveDTO pedidoAdicionaRemoveDTO) {
+    public Response removeItemCompra(PedidoRemoveItemCompraDTO pedidoAdicionaRemoveDTO) {
         return service.removeItemCompra(pedidoAdicionaRemoveDTO);
     }
 
     @PUT
     @RolesAllowed({ "Admin", "Caixa", "Garcom" })
     @Transactional
-    public Response adicioaItemCompra(PedidoAdicionaRemoveDTO pedidoAdicionaRemoveDTO) {
+    public Response adicioaItemCompra(PedidoAdicionaItemCompraDTO pedidoAdicionaRemoveDTO) {
         return service.adicionaItemCompra(pedidoAdicionaRemoveDTO);
     }
 }
