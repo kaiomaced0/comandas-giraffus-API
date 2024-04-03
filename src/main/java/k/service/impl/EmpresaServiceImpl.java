@@ -9,10 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
-import k.dto.EmpresaDTO;
-import k.dto.EmpresaResponseDTO;
-import k.dto.EmpresaUpdateNomeDTO;
-import k.dto.EmpresaUpdateNomeMasterDTO;
+import k.dto.*;
 import k.model.Caixa;
 import k.model.Empresa;
 import k.model.Perfil;
@@ -87,11 +84,10 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Override
     public Response updateCaixaAtual(Long id) {
         try {
-
+            Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
             Caixa cx = caixaRepository.findById(id);
-            Empresa e = usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa();
-            e.setCaixaAtual(cx);
-            return Response.ok().build();
+            u.getEmpresa().setCaixaAtual(cx);
+            return Response.ok(new CaixaResponseDTO(u.getEmpresa().getCaixaAtual())).build();
         }catch (Exception e){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
