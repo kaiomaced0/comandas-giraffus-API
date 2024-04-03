@@ -67,7 +67,7 @@ public class ComandaServiceImpl implements ComandaService {
                     .map(ComandaResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Comandas.getAll()");
+            LOG.error("Erro ao rodar Requisicao Comandas.getAll()");
             return null;
         }
     }
@@ -96,10 +96,10 @@ public class ComandaServiceImpl implements ComandaService {
             repository.persist(entity);
             u.getEmpresa().getCaixaAtual().getComandas().add(entity);
             u.getEmpresa().getComandas().add(entity);
-            LOG.info("Requisição Comandas.insert() - ok");
+            LOG.info("Requisicao Comandas.insert() - ok");
             return Response.ok().entity(new ComandaResponseDTO(entity)).build();
         } catch (Exception e) {
-            LOG.error("Requisição Comandas.insert() falhou");
+            LOG.error("Requisicao Comandas.insert() falhou");
             return Response.status(400).entity(e.getMessage()).build();
         }
 
