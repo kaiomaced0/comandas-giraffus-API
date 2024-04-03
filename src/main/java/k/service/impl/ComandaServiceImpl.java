@@ -1,12 +1,14 @@
 package k.service.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import k.dto.CaixaDTO;
 import k.model.*;
 import k.service.CaixaService;
+import k.service.PedidoService;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
@@ -40,6 +42,9 @@ public class ComandaServiceImpl implements ComandaService {
 
     @Inject
     EmpresaRepository empresaRepository;
+
+    @Inject
+    PedidoService pedidoService;
 
     @Inject
     CaixaService caixaService;
@@ -114,6 +119,7 @@ public class ComandaServiceImpl implements ComandaService {
             comanda.setPreco(0.0);
             for (Pedido p : comanda.getPedidos()) {
                 if (p.getAtivo()) {
+                    pedidoService.updateValor(p.getId());
                     comanda.setPreco(comanda.getPreco() + p.getValor());
                 }
             }

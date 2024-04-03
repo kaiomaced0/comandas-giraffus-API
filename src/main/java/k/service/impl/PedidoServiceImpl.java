@@ -2,6 +2,7 @@ package k.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,10 +11,7 @@ import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.*;
-import k.model.Comanda;
-import k.model.ItemCompra;
-import k.model.Pedido;
-import k.model.StatusPedido;
+import k.model.*;
 import k.repository.ComandaRepository;
 import k.repository.ItemCompraRepository;
 import k.repository.PedidoRepository;
@@ -78,29 +76,36 @@ public class PedidoServiceImpl implements PedidoService {
     @Transactional
     public Response insert(PedidoDTO pedidoDTO) {
         try {
-
+            Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
             Comanda comanda = comandaRepository.findById(pedidoDTO.idComanda());
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().contains(comanda)) {
-                Pedido pedido = new Pedido();
-                pedido.setValor(0.0);
-                for (ItemCompraDTO i : pedidoDTO.listItemCompraDTO()) {
-                    ItemCompra item = new ItemCompra();
-                    item = itemCompraService.insert(i);
-                    if(item != null){
-                        pedido.getItemCompras().add(item);
-                        pedido.setValor(pedido.getValor() + item.getPreco());
-                    }
-                }
-                pedido.setObservacao(pedidoDTO.observacao());
-                pedido.setQuantidadePessoas(pedidoDTO.quantidadePessoas());
-                pedido.setStatusPedido(StatusPedido.AGUARDANDO);
-                pedido.setComanda(comanda);
-                repository.persist(pedido);
-                comandaService.updatePreco(comanda.getId());
-                return Response.ok().build();
-            } else {
+            if (!u.getEmpresa().getComandas().contains(comanda)) {
                 throw new Exception();
             }
+            Pedido pedido = new Pedido();
+            pedido.setValor(0.0);
+            for (ItemCompraDTO i : pedidoDTO.listItemCompraDTO()) {
+                ItemCompra item = new ItemCompra();
+                item = itemCompraService.insert(i);
+                if(item != null){
+                    if(pedido.getItemCompras() == null){
+                        pedido.setItemCompras(new ArrayList<>());
+                    }
+                    pedido.getItemCompras().add(item);
+                    pedido.setValor(pedido.getValor() + item.getPreco());
+                }
+            }
+            pedido.setObservacao(pedidoDTO.observacao());
+            pedido.setQuantidadePessoas(pedidoDTO.quantidadePessoas());
+            pedido.setStatusPedido(StatusPedido.AGUARDANDO);
+            pedido.setComanda(comanda);
+            repository.persist(pedido);
+            if(comanda.getPedidos() == null){
+                comanda.setPedidos(new ArrayList<>());
+            }
+            comanda.getPedidos().add(pedido);
+            comandaService.updatePreco(comanda.getId());
+            return Response.ok(new PedidoResponseDTO(pedido)).build();
+
         } catch (Exception e) {
             return Response.status(Status.STATUS_NO_TRANSACTION).build();
         }
