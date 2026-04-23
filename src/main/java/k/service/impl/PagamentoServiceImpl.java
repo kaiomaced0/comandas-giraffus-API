@@ -77,7 +77,7 @@ public class PagamentoServiceImpl implements PagamentoService {
             }
             entity.setPagamentoRealizado(true);
             entity.getComanda().setFinalizada(true);
-            entity.setValorGorjeta(entity.getComanda().getPreco() - entity.getValorPagamento());
+            entity.setValorGorjeta(entity.getValorPagamento() - entity.getComanda().getPreco());
 //            if (entity.getValorGorjeta() > entity.getValorPagamento() * 0.01) {
 //                entity.getComanda().setTaxaServico(true);
 //            } **  Meio sem sentido, excluir  **

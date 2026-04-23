@@ -29,10 +29,4 @@ public class HashServiceImpl implements HashService {
             throw new RuntimeException(e);
         }
     }
-
-    public static void main(String[] args) {
-
-        HashService service = new HashServiceImpl();
-        System.out.println(service.getHashSenha("123456"));
-    }
 }
