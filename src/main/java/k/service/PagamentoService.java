@@ -8,12 +8,16 @@ import k.dto.PagamentoDeleteDTO;
 import k.dto.PagamentoResponseDTO;
 
 public interface PagamentoService {
-    public List<PagamentoResponseDTO> getAll();
 
-    public PagamentoResponseDTO getId(Long id);
+    List<PagamentoResponseDTO> getAll();
 
-    public Response insert(PagamentoDTO pagamento);
+    PagamentoResponseDTO getId(Long id);
 
-    public Response delete(PagamentoDeleteDTO pagamentoDeleteDTO);
+    List<PagamentoResponseDTO> getByComanda(Long idComanda);
 
+    Response insert(PagamentoDTO pagamento);
+
+    Response estornar(Long id);
+
+    Response delete(PagamentoDeleteDTO pagamentoDeleteDTO);
 }

@@ -1,30 +1,30 @@
 package k.service.impl;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import k.dto.CaixaDTO;
-import k.model.*;
-import k.service.CaixaService;
-import k.service.PedidoService;
-import org.jboss.logging.Logger;
-
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.ComandaDTO;
-import k.dto.ComandaPagarDTO;
 import k.dto.ComandaResponseDTO;
+import k.exception.BusinessException;
+import k.model.Caixa;
+import k.model.Comanda;
+import k.model.Mesa;
+import k.model.Pedido;
+import k.model.Usuario;
+import k.repository.CaixaRepository;
 import k.repository.ComandaRepository;
 import k.repository.EmpresaRepository;
-import k.repository.PagamentoRepository;
+import k.repository.MesaRepository;
 import k.service.ComandaService;
+import k.service.PedidoService;
 import k.service.UsuarioLogadoService;
-
-import jakarta.enterprise.context.ApplicationScoped;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ComandaServiceImpl implements ComandaService {
@@ -38,25 +38,24 @@ public class ComandaServiceImpl implements ComandaService {
     UsuarioLogadoService usuarioLogadoService;
 
     @Inject
-    PagamentoRepository pagamentoRepository;
-
-    @Inject
     EmpresaRepository empresaRepository;
 
     @Inject
     PedidoService pedidoService;
 
     @Inject
-    CaixaService caixaService;
+    CaixaRepository caixaRepository;
+
+    @Inject
+    MesaRepository mesaRepository;
 
     @Override
     public List<ComandaResponseDTO> getAll() {
         try {
             LOG.info("Requisição Comandas.getAll()");
             return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().stream()
-                    .filter(EntityClass::getAtivo)
-                    .map(ComandaResponseDTO::new).collect(Collectors.toList());
-
+                    .map(ComandaResponseDTO::new)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Comandas.getAll()");
             return null;
@@ -66,13 +65,12 @@ public class ComandaServiceImpl implements ComandaService {
     @Override
     public List<ComandaResponseDTO> getNome(String nome) {
         try {
-            LOG.info("Requisição Comandas.getAll()");
             return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().stream()
-                    .filter(EntityClass::getAtivo).filter(comanda -> comanda.getNome().contains(nome))
-                    .map(ComandaResponseDTO::new).collect(Collectors.toList());
-
+                    .filter(c -> c.getNome() != null && c.getNome().contains(nome))
+                    .map(ComandaResponseDTO::new)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisicao Comandas.getAll()");
+            LOG.error("Erro ao rodar Requisicao Comandas.getNome()");
             return null;
         }
     }
@@ -80,8 +78,8 @@ public class ComandaServiceImpl implements ComandaService {
     @Override
     public ComandaResponseDTO getId(Long id) {
         try {
-            return new ComandaResponseDTO(repository.findById(id));
-
+            Comanda c = repository.findById(id);
+            return c == null ? null : new ComandaResponseDTO(c);
         } catch (Exception e) {
             return null;
         }
@@ -92,53 +90,54 @@ public class ComandaServiceImpl implements ComandaService {
     public Response insert(ComandaDTO comanda) {
         Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
         try {
-            if(u.getEmpresa().getCaixaAtual() == null){
-                throw new Exception("Caixa atual não existe!");
+            Caixa caixaAberto = caixaRepository.findAbertoPorUsuario(u);
+            if (caixaAberto == null) {
+                throw new BusinessException("Usuário não tem caixa aberto; abra um caixa antes de criar comandas");
             }
             Comanda entity = ComandaDTO.criaComanda(comanda);
             entity.setAtendente(u);
             entity.setPedidos(new ArrayList<>());
+            if (comanda.mesaId() != null) {
+                Mesa mesa = mesaRepository.findById(comanda.mesaId());
+                if (mesa == null || mesa.getEmpresa() == null
+                        || !mesa.getEmpresa().getId().equals(u.getEmpresa().getId())) {
+                    throw new BusinessException("Mesa não encontrada na empresa");
+                }
+                entity.setMesa(mesa);
+            }
             repository.persist(entity);
-            u.getEmpresa().getCaixaAtual().getComandas().add(entity);
+            if (caixaAberto.getComandas() == null) {
+                caixaAberto.setComandas(new ArrayList<>());
+            }
+            caixaAberto.getComandas().add(entity);
+            if (u.getEmpresa().getComandas() == null) {
+                u.getEmpresa().setComandas(new ArrayList<>());
+            }
             u.getEmpresa().getComandas().add(entity);
-            LOG.info("Requisicao Comandas.insert() - ok");
-            return Response.ok().entity(new ComandaResponseDTO(entity)).build();
+            return Response.ok(new ComandaResponseDTO(entity)).build();
+        } catch (BusinessException be) {
+            throw be;
         } catch (Exception e) {
-            LOG.error("Requisicao Comandas.insert() falhou");
+            LOG.error("Requisicao Comandas.insert() falhou", e);
             return Response.status(400).entity(e.getMessage()).build();
         }
-
     }
 
     @Override
     @Transactional
     public Response updatePreco(Long id) {
         try {
-
             Comanda comanda = repository.findById(id);
             comanda.setPreco(0.0);
-            for (Pedido p : comanda.getPedidos()) {
-                if (p.getAtivo()) {
+            if (comanda.getPedidos() != null) {
+                for (Pedido p : comanda.getPedidos()) {
                     pedidoService.updateValor(p.getId());
-                    comanda.setPreco(comanda.getPreco() + p.getValor());
+                    if (p.getValor() != null) {
+                        comanda.setPreco(comanda.getPreco() + p.getValor());
+                    }
                 }
             }
             return Response.ok(new ComandaResponseDTO(comanda)).build();
-
-        } catch (Exception e) {
-            return Response.status(Status.STATUS_NO_TRANSACTION).build();
-        }
-    }
-
-    @Override
-    @Transactional
-    public Response pagar(ComandaPagarDTO comandaPagarDTO) {
-        try {
-            Comanda entity = repository.findById(comandaPagarDTO.id());
-            entity.setFinalizada(true);
-            entity.setPagamento(pagamentoRepository.findById(comandaPagarDTO.idPagamento()));
-            return Response.ok().build();
-
         } catch (Exception e) {
             return Response.status(Status.STATUS_NO_TRANSACTION).build();
         }
@@ -155,13 +154,11 @@ public class ComandaServiceImpl implements ComandaService {
     @Override
     public List<ComandaResponseDTO> getEmAberto() {
         try {
-            LOG.info("Requisição Comandas.getEmAberto()");
             return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().stream()
-                    .filter(comandas -> !comandas.getFinalizada()).filter(EntityClass::getAtivo)
-                    .map(ComandaResponseDTO::new).collect(Collectors.toList());
-
+                    .filter(c -> !Boolean.TRUE.equals(c.getFinalizada()))
+                    .map(ComandaResponseDTO::new)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Comandas.getEmAberto()");
             return null;
         }
     }
@@ -169,15 +166,11 @@ public class ComandaServiceImpl implements ComandaService {
     @Override
     public List<ComandaResponseDTO> getAllComandasAdm(Long idEmpresa) {
         try {
-            LOG.info("Requisição Comandas.getAllComandasAdm()");
             return empresaRepository.findById(idEmpresa).getComandas().stream()
-                    .filter(comandas -> comandas.getAtivo())
-                    .map(comandas -> new ComandaResponseDTO(comandas)).collect(Collectors.toList());
-
+                    .map(ComandaResponseDTO::new)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
-            LOG.error("Erro ao rodar Requisição Comandas.getAllComandasAdm()");
             return null;
         }
     }
-
 }

@@ -1,9 +1,11 @@
 package k.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Where(clause = "ativo = true")
 public class ItemCompra extends EntityClass {
 
     @ManyToOne

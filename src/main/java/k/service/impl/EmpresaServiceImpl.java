@@ -1,8 +1,6 @@
 package k.service.impl;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
@@ -10,11 +8,8 @@ import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.*;
-import k.model.Caixa;
 import k.model.Empresa;
 import k.model.Perfil;
-import k.model.Usuario;
-import k.repository.CaixaRepository;
 import k.repository.EmpresaRepository;
 import k.repository.UsuarioRepository;
 import k.service.EmpresaService;
@@ -33,9 +28,6 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     @Inject
     UsuarioRepository usuarioRepository;
-
-    @Inject
-    CaixaRepository caixaRepository;
 
     @Override
     public List<EmpresaResponseDTO> getAll() {
@@ -80,20 +72,6 @@ public class EmpresaServiceImpl implements EmpresaService {
             return null;
         }
     }
-
-    @Override
-    public Response updateCaixaAtual(Long id) {
-        try {
-            Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
-            Caixa cx = caixaRepository.findById(id);
-            u.getEmpresa().setCaixaAtual(cx);
-            return Response.ok(new CaixaResponseDTO(u.getEmpresa().getCaixaAtual())).build();
-        }catch (Exception e){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-    }
-
 
     @Override
     public EmpresaResponseDTO getId(Long id) {

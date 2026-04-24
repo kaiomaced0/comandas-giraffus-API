@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -28,31 +27,35 @@ public class PagamentoResource {
     PagamentoService service;
 
     @GET
-    @RolesAllowed({ "Admin", "Caixa" })
+    @RolesAllowed({"Admin", "Caixa"})
     public List<PagamentoResponseDTO> getAll() {
         return service.getAll();
     }
 
     @GET
     @Path("/{id}")
-    @RolesAllowed({ "Admin", "Caixa" })
+    @RolesAllowed({"Admin", "Caixa"})
     public PagamentoResponseDTO getId(@PathParam("id") Long id) {
         return service.getId(id);
     }
 
     @POST
-    @RolesAllowed({ "Admin", "Caixa" })
-    @Transactional
+    @RolesAllowed({"Admin", "Caixa"})
     public Response insert(PagamentoDTO Pagamento) {
         return service.insert(Pagamento);
     }
 
     @PATCH
+    @Path("/{id}/estornar")
+    @RolesAllowed({"Admin", "Caixa"})
+    public Response estornar(@PathParam("id") Long id) {
+        return service.estornar(id);
+    }
+
+    @PATCH
     @Path("/delete/{id}")
-    @RolesAllowed({ "Admin", "Caixa" })
-    @Transactional
+    @RolesAllowed({"Admin", "Caixa"})
     public Response delete(@PathParam("id") Long id, String observacao) {
         return service.delete(new PagamentoDeleteDTO(id, observacao));
     }
-
 }

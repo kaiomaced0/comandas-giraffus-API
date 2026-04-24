@@ -3,9 +3,11 @@ package k.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Where(clause = "ativo = true")
 public class TipoProduto extends EntityClass {
     private String nome;
 

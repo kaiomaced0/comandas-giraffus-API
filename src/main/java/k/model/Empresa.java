@@ -44,18 +44,30 @@ public class Empresa extends EntityClass {
     @JoinColumn(name = "lista_comanda_empresa")
     private List<Comanda> comandas;
 
-    @OneToOne
-    @JoinColumn(name = "caixa_atual")
-    private Caixa caixaAtual;
+    @OneToMany
+    @JoinColumn(name = "lista_mesa_empresa")
+    private List<Mesa> mesas;
+
+    @OneToMany
+    @JoinColumn(name = "lista_cliente_empresa")
+    private List<Cliente> clientes;
 
     private String comentario;
 
-    public Caixa getCaixaAtual() {
-        return caixaAtual;
+    public List<Mesa> getMesas() {
+        return mesas;
     }
 
-    public void setCaixaAtual(Caixa caixaAtual) {
-        this.caixaAtual = caixaAtual;
+    public void setMesas(List<Mesa> mesas) {
+        this.mesas = mesas;
+    }
+
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(List<Cliente> clientes) {
+        this.clientes = clientes;
     }
 
     public String getComentario() {

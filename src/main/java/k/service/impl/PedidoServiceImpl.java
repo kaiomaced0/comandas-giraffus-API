@@ -1,6 +1,5 @@
 package k.service.impl;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +11,10 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.*;
 import k.model.*;
+import k.model.enums.TipoMovimentoEstoque;
 import k.repository.ComandaRepository;
 import k.repository.ItemCompraRepository;
+import k.repository.MovimentoEstoqueRepository;
 import k.repository.PedidoRepository;
 import k.service.ComandaService;
 import k.service.ItemCompraService;
@@ -45,6 +46,9 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Inject
     ComandaService comandaService;
+
+    @Inject
+    MovimentoEstoqueRepository movimentoEstoqueRepository;
 
 
     @Override
@@ -84,14 +88,14 @@ public class PedidoServiceImpl implements PedidoService {
             Pedido pedido = new Pedido();
             pedido.setValor(0.0);
             for (ItemCompraDTO i : pedidoDTO.listItemCompraDTO()) {
-                ItemCompra item = new ItemCompra();
-                item = itemCompraService.insert(i);
-                if(item != null){
-                    if(pedido.getItemCompras() == null){
+                ItemCompra item = itemCompraService.insert(i);
+                if (item != null) {
+                    if (pedido.getItemCompras() == null) {
                         pedido.setItemCompras(new ArrayList<>());
                     }
                     pedido.getItemCompras().add(item);
                     pedido.setValor(pedido.getValor() + item.getPreco());
+                    registrarMovimentoVenda(item, u);
                 }
             }
             pedido.setObservacao(pedidoDTO.observacao());
@@ -99,7 +103,7 @@ public class PedidoServiceImpl implements PedidoService {
             pedido.setStatusPedido(StatusPedido.AGUARDANDO);
             pedido.setComanda(comanda);
             repository.persist(pedido);
-            if(comanda.getPedidos() == null){
+            if (comanda.getPedidos() == null) {
                 comanda.setPedidos(new ArrayList<>());
             }
             comanda.getPedidos().add(pedido);
@@ -170,9 +174,7 @@ public class PedidoServiceImpl implements PedidoService {
             Pedido pedido = repository.findById(id);
             pedido.setValor(0.0);
             for (ItemCompra i : pedido.getItemCompras()) {
-                if (i.getAtivo()) {
-                    i.setPreco(pedido.getValor() + i.getPreco());
-                }
+                i.setPreco(pedido.getValor() + i.getPreco());
             }
             return Response.ok(new PedidoResponseDTO(pedido)).build();
 
@@ -181,13 +183,26 @@ public class PedidoServiceImpl implements PedidoService {
         }
     }
 
+    private void registrarMovimentoVenda(ItemCompra item, Usuario u) {
+        if (item == null || item.getProduto() == null || item.getQuantidade() == null) {
+            return;
+        }
+        MovimentoEstoque m = new MovimentoEstoque();
+        m.setProduto(item.getProduto());
+        m.setTipo(TipoMovimentoEstoque.VENDA);
+        m.setQuantidade(item.getQuantidade());
+        m.setMotivo("Venda - pedido");
+        m.setUsuario(u);
+        m.setData(LocalDateTime.now());
+        movimentoEstoqueRepository.persist(m);
+    }
+
     @Override
     public List<PedidoResponseDTO> getAbertos() {
         return repository.findAll().stream()
                 .filter(pedido -> usuarioLogadoService.getPerfilUsuarioLogado()
                         .getEmpresa().getComandas().contains(pedido.getComanda()))
-                .filter(pedido -> !pedido.getComanda().getFinalizada()).
-                filter(pedido -> usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixaAtual().getComandas().contains(pedido.getComanda()))
+                .filter(pedido -> !Boolean.TRUE.equals(pedido.getComanda().getFinalizada()))
                 .map(PedidoResponseDTO::new).collect(Collectors.toList());
 
     }

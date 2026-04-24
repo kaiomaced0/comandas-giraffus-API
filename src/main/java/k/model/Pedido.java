@@ -1,11 +1,13 @@
 package k.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Where(clause = "ativo = true")
 public class Pedido extends EntityClass {
 
     @OneToMany

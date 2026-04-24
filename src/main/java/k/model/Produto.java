@@ -6,9 +6,11 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Where(clause = "ativo = true")
 public class Produto extends EntityClass {
 
     private String nome;

@@ -3,9 +3,11 @@ package k.model;
 import java.util.List;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Where(clause = "ativo = true")
 public class Comanda extends EntityClass {
 
     private String nome;
@@ -18,22 +20,33 @@ public class Comanda extends EntityClass {
 
     private Boolean finalizada;
 
-    @OneToOne
-    @JoinColumn(name = "comanda_pagamento")
-    private Pagamento pagamento;
+    @OneToMany(mappedBy = "comanda")
+    private List<Pagamento> pagamentos;
 
     @ManyToOne
     @JoinColumn(name = "atendente_comanda")
     private Usuario atendente;
 
+    @ManyToOne
+    @JoinColumn(name = "mesa_comanda")
+    private Mesa mesa;
+
     private Boolean taxaServico;
 
-    public Pagamento getPagamento() {
-        return pagamento;
+    public List<Pagamento> getPagamentos() {
+        return pagamentos;
     }
 
-    public void setPagamento(Pagamento pagamento) {
-        this.pagamento = pagamento;
+    public void setPagamentos(List<Pagamento> pagamentos) {
+        this.pagamentos = pagamentos;
+    }
+
+    public Mesa getMesa() {
+        return mesa;
+    }
+
+    public void setMesa(Mesa mesa) {
+        this.mesa = mesa;
     }
 
     public Boolean getTaxaServico() {

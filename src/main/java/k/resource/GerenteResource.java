@@ -44,14 +44,6 @@ public class GerenteResource {
 
     @PATCH
     @RolesAllowed({ "Admin" })
-    @Path("/caixa/{id}")
-    @Transactional
-    public Response updateCaixaAtual(@PathParam("id") Long id) {
-        return empresaService.updateCaixaAtual(id);
-    }
-
-    @PATCH
-    @RolesAllowed({ "Admin" })
     @Path("/funcionario/update/senha")
     @Transactional
     public Response updateSenhaUsuario(UsuarioUpdateSenhaGerenteDTO usuarioUpdateSenhaGerenteDTO) {

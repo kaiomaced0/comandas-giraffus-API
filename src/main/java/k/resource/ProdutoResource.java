@@ -14,6 +14,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import k.dto.MovimentoEstoqueResponseDTO;
 import k.dto.ProdutoAdicionaRetiraDTO;
 import k.dto.ProdutoDTO;
 import k.dto.ProdutoResponseDTO;
@@ -84,6 +85,13 @@ public class ProdutoResource {
     @Transactional
     public Response delete(@PathParam("id") Long id) {
         return service.delete(id);
+    }
+
+    @GET
+    @Path("/{id}/movimentacoes")
+    @RolesAllowed({ "Admin" })
+    public List<MovimentoEstoqueResponseDTO> listarMovimentacoes(@PathParam("id") Long id) {
+        return service.listarMovimentacoes(id);
     }
 
 }

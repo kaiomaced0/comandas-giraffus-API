@@ -5,26 +5,23 @@ import java.util.List;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 import k.dto.ComandaDTO;
-import k.dto.ComandaPagarDTO;
 import k.dto.ComandaResponseDTO;
 
 public interface ComandaService {
-    public List<ComandaResponseDTO> getAll();
 
-    public List<ComandaResponseDTO> getEmAberto();
+    List<ComandaResponseDTO> getAll();
 
-    public List<ComandaResponseDTO> getAllComandasAdm(Long idEmpresa);
+    List<ComandaResponseDTO> getEmAberto();
 
-    public List<ComandaResponseDTO> getNome(@PathParam("nome") String nome);
+    List<ComandaResponseDTO> getAllComandasAdm(Long idEmpresa);
 
-    public ComandaResponseDTO getId(@PathParam("id") Long id);
+    List<ComandaResponseDTO> getNome(@PathParam("nome") String nome);
 
-    public Response insert(ComandaDTO comanda);
+    ComandaResponseDTO getId(@PathParam("id") Long id);
 
-    public Response pagar(ComandaPagarDTO comandaPagarDTO);
+    Response insert(ComandaDTO comanda);
 
-    public Response delete(@PathParam("id") Long id);
+    Response delete(@PathParam("id") Long id);
 
-    public Response updatePreco(Long id);
-
+    Response updatePreco(Long id);
 }

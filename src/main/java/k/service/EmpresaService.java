@@ -18,8 +18,6 @@ public interface EmpresaService {
 
     public List<EmpresaResponseDTO> getCnpj(String cnpj);
 
-    public Response updateCaixaAtual(Long id);
-
     public EmpresaResponseDTO getId(Long id);
 
     public Response insert(EmpresaDTO empresa);
