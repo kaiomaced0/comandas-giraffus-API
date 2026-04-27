@@ -99,6 +99,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <!--
+            JDK 25 + Netty no Windows: WEPollSelectorProvider tenta abrir Unix Domain Socket pipe
+            e quebra com "Unable to establish loopback connection". Forcamos o SelectorProvider
+            classico do Windows pre-JDK 25 via system property abaixo.
+          -->
           <argLine>-Dnet.bytebuddy.experimental=true</argLine>
         </configuration>
       </plugin>

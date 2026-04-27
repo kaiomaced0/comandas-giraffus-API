@@ -105,7 +105,7 @@ class PagamentoServiceImplTest {
         }
 
         @Override
-        public Response updateSenha(k.dto.UsuarioUpdateSenhaDTO usuarioUpdateSenha) {
+        public Response updateSenha(k.dto.UsuarioLogadoSenhaDTO usuarioLogadoSenhaDTO) {
             throw new UnsupportedOperationException();
         }
 

@@ -6,10 +6,10 @@ import org.jboss.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import k.dto.UsuarioLogadoSenhaDTO;
 import k.dto.UsuarioResponseDTO;
 import k.dto.UsuarioUpdateEmailDTO;
 import k.dto.UsuarioUpdateLoginDTO;
-import k.dto.UsuarioUpdateSenhaDTO;
 import k.model.Usuario;
 import k.repository.UsuarioRepository;
 import k.resource.HashResource;
@@ -33,16 +33,12 @@ public class UsuarioLogadoServiceImpl implements UsuarioLogadoService {
 
     @Override
     @Transactional
-    public Response updateSenha(UsuarioUpdateSenhaDTO usuarioUpdateSenha) {
+    public Response updateSenha(UsuarioLogadoSenhaDTO usuarioLogadoSenhaDTO) {
         Usuario entity = usuarioRepository.findById(getPerfilUsuarioLogado().getId());
         try {
-            if (usuarioUpdateSenha.senhaAntiga() == entity.getSenha()) {
-                LOG.info("Requisicao Usuario.updatupdateSenhaeNome()");
-                entity.setSenha(usuarioUpdateSenha.novaSenha());
-                return Response.ok(new UsuarioResponseDTO(entity)).build();
-            } else {
-                throw new Exception();
-            }
+            LOG.info("Requisicao Usuario.updateSenha()");
+            entity.setSenha(usuarioLogadoSenhaDTO.senha());
+            return Response.ok(new UsuarioResponseDTO(entity)).build();
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisicao Usuario.updateSenha()");
             return Response.notModified().build();

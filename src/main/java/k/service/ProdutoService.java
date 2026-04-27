@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
+import k.dto.PagedResponse;
 import k.dto.ProdutoAdicionaRetiraDTO;
 import k.dto.ProdutoDTO;
 import k.dto.ProdutoResponseDTO;
@@ -25,4 +26,14 @@ public interface ProdutoService {
     public Response retiraEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO);
 
     public Response adicionaEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO);
+
+    /**
+     * Listagem paginada de produtos da empresa do usuário logado.
+     */
+    public PagedResponse<ProdutoResponseDTO> list(
+            Long tipoProdutoId,
+            String search,
+            Boolean emEstoque,
+            int page,
+            int size);
 }

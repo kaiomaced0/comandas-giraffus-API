@@ -3,7 +3,8 @@ package k.dto;
 import k.model.Comanda;
 
 public record ComandaDTO(
-        String nome) {
+        String nome,
+        Long mesaId) {
     public static Comanda criaComanda(ComandaDTO comandaDTO) {
         Comanda p = new Comanda();
         p.setNome(comandaDTO.nome);

@@ -1,22 +1,30 @@
 package k.service.impl;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 import jakarta.inject.Inject;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import k.dto.PagedResponse;
 import k.dto.ProdutoAdicionaRetiraDTO;
 import k.dto.ProdutoDTO;
 import k.dto.ProdutoResponseDTO;
+import k.model.Empresa;
 import k.model.EntityClass;
 import k.model.Produto;
+import k.model.TipoMovimentoEstoque;
 import k.model.TipoProduto;
 import k.model.Usuario;
 import k.repository.EmpresaRepository;
 import k.repository.ProdutoRepository;
 import k.repository.TipoProdutoRepository;
+import k.service.MovimentoEstoqueService;
 import k.service.ProdutoService;
 import k.service.UsuarioLogadoService;
 
@@ -36,6 +44,9 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Inject
     EmpresaRepository empresaRepository;
+
+    @Inject
+    MovimentoEstoqueService movimentoEstoqueService;
 
     @Override
     public List<ProdutoResponseDTO> getAll() {
@@ -143,6 +154,8 @@ public class ProdutoServiceImpl implements ProdutoService {
             if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
                 Integer a = p.getEstoque();
                 p.setEstoque(p.getEstoque() - produtoAdicionaRetiraDTO.quantidade());
+                movimentoEstoqueService.registrar(p, TipoMovimentoEstoque.SAIDA,
+                        produtoAdicionaRetiraDTO.quantidade(), null);
                 return Response.ok("Valor Anterior -" + a + ", valor atual - " + p.getEstoque() + " .").build();
             } else {
                 throw new Exception();
@@ -160,6 +173,8 @@ public class ProdutoServiceImpl implements ProdutoService {
             if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
                 Integer a = p.getEstoque();
                 p.setEstoque(p.getEstoque() + produtoAdicionaRetiraDTO.quantidade());
+                movimentoEstoqueService.registrar(p, TipoMovimentoEstoque.ENTRADA,
+                        produtoAdicionaRetiraDTO.quantidade(), null);
                 return Response.ok("Valor Anterior -" + a + ", valor atual - " + p.getEstoque() + " .").build();
             } else {
                 throw new Exception();
@@ -167,6 +182,63 @@ public class ProdutoServiceImpl implements ProdutoService {
         } catch (Exception e) {
             return Response.status(Status.STATUS_NO_TRANSACTION).build();
         }
+    }
+
+    @Override
+    public PagedResponse<ProdutoResponseDTO> list(
+            Long tipoProdutoId,
+            String search,
+            Boolean emEstoque,
+            int page,
+            int size) {
+
+        int p = Math.max(0, page);
+        int s = Math.min(Math.max(1, size), 100);
+
+        Usuario logado = usuarioLogadoService.getPerfilUsuarioLogado();
+        if (logado == null || logado.getEmpresa() == null) {
+            return new PagedResponse<>(List.of(), p, s, 0L);
+        }
+        Empresa empresa = logado.getEmpresa();
+
+        // Multi-tenant: produto pertence à lista da empresa
+        List<Long> idsProdutosEmpresa = empresa.getProdutos() == null
+                ? List.of()
+                : empresa.getProdutos().stream()
+                        .filter(pr -> pr != null && pr.getId() != null)
+                        .map(Produto::getId)
+                        .collect(Collectors.toList());
+        if (idsProdutosEmpresa.isEmpty()) {
+            return new PagedResponse<>(List.of(), p, s, 0L);
+        }
+
+        StringBuilder ql = new StringBuilder("id in :ids and ativo = true");
+        Map<String, Object> params = new LinkedHashMap<>();
+        params.put("ids", idsProdutosEmpresa);
+
+        if (tipoProdutoId != null) {
+            ql.append(" and tipoProduto.id = :tipoProdutoId");
+            params.put("tipoProdutoId", tipoProdutoId);
+        }
+        if (search != null && !search.isBlank()) {
+            ql.append(" and upper(nome) like :search");
+            params.put("search", "%" + search.trim().toUpperCase() + "%");
+        }
+        if (Boolean.TRUE.equals(emEstoque)) {
+            ql.append(" and estoque > 0");
+        }
+
+        long total = repository.count(ql.toString(), params);
+        List<Produto> produtos = repository
+                .find(ql.toString(), Sort.by("nome").ascending(), params)
+                .page(Page.of(p, s))
+                .list();
+
+        List<ProdutoResponseDTO> data = produtos.stream()
+                .map(ProdutoResponseDTO::new)
+                .collect(Collectors.toList());
+
+        return new PagedResponse<>(data, p, s, total);
     }
 
 }

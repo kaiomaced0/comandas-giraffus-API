@@ -26,6 +26,10 @@ public class Comanda extends EntityClass {
     @JoinColumn(name = "atendente_comanda")
     private Usuario atendente;
 
+    @ManyToOne
+    @JoinColumn(name = "mesa_comanda")
+    private Mesa mesa;
+
     private Boolean taxaServico;
 
     public Pagamento getPagamento() {
@@ -82,5 +86,13 @@ public class Comanda extends EntityClass {
 
     public void setAtendente(Usuario atendente) {
         this.atendente = atendente;
+    }
+
+    public Mesa getMesa() {
+        return mesa;
+    }
+
+    public void setMesa(Mesa mesa) {
+        this.mesa = mesa;
     }
 }

@@ -44,6 +44,7 @@ public class Empresa extends EntityClass {
     @JoinColumn(name = "lista_comanda_empresa")
     private List<Comanda> comandas;
 
+    // TODO Fase pré-produção: remover Empresa.caixaAtual
     @OneToOne
     @JoinColumn(name = "caixa_atual")
     private Caixa caixaAtual;

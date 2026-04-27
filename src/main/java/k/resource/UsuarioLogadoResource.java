@@ -1,6 +1,7 @@
 package k.resource;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -11,9 +12,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import k.dto.UsuarioLogadoSenhaDTO;
 import k.dto.UsuarioUpdateEmailDTO;
 import k.dto.UsuarioUpdateLoginDTO;
-import k.dto.UsuarioUpdateSenhaDTO;
 import k.service.UsuarioLogadoService;
 
 @Path("/usuariologado")
@@ -32,7 +33,7 @@ public class UsuarioLogadoResource {
     }
 
     @PATCH
-    @PermitAll
+    @RolesAllowed({ "Master", "Admin", "Garcom", "Caixa", "Cozinha" })
     @Path("/update/email/{email}")
     @Transactional
     public Response updateEmail(UsuarioUpdateEmailDTO usuarioUpdateEmailDTO) {
@@ -40,7 +41,7 @@ public class UsuarioLogadoResource {
     }
 
     @PATCH
-    @PermitAll
+    @RolesAllowed({ "Master", "Admin", "Garcom", "Caixa", "Cozinha" })
     @Path("/update/login/{email}")
     @Transactional
     public Response updateLogin(UsuarioUpdateLoginDTO usuarioUpdateLoginDTO) {
@@ -48,10 +49,10 @@ public class UsuarioLogadoResource {
     }
 
     @PATCH
-    @PermitAll
-    @Path("/update/email/{email}")
+    @RolesAllowed({ "Master", "Admin", "Garcom", "Caixa", "Cozinha" })
+    @Path("/update/senha")
     @Transactional
-    public Response updateSenha(UsuarioUpdateSenhaDTO usuarioUpdateSenhaDTO) {
-        return service.updateSenha(usuarioUpdateSenhaDTO);
+    public Response updateSenha(UsuarioLogadoSenhaDTO usuarioLogadoSenhaDTO) {
+        return service.updateSenha(usuarioLogadoSenhaDTO);
     }
 }
