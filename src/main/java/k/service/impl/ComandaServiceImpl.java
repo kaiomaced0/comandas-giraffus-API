@@ -67,7 +67,8 @@ public class ComandaServiceImpl implements ComandaService {
     public List<ComandaResponseDTO> getAll() {
         try {
             LOG.info("Requisição Comandas.getAll()");
-            return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().stream()
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            return emp.getComandas().stream()
                     .filter(EntityClass::getAtivo)
                     .map(ComandaResponseDTO::new).collect(Collectors.toList());
 
@@ -81,7 +82,8 @@ public class ComandaServiceImpl implements ComandaService {
     public List<ComandaResponseDTO> getNome(String nome) {
         try {
             LOG.info("Requisição Comandas.getAll()");
-            return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().stream()
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            return emp.getComandas().stream()
                     .filter(EntityClass::getAtivo).filter(comanda -> comanda.getNome().contains(nome))
                     .map(ComandaResponseDTO::new).collect(Collectors.toList());
 
@@ -105,8 +107,9 @@ public class ComandaServiceImpl implements ComandaService {
     @Transactional
     public Response insert(ComandaDTO comanda) {
         Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         try {
-            if(u.getEmpresa().getCaixaAtual() == null){
+            if(emp.getCaixaAtual() == null){
                 throw new Exception("Caixa atual não existe!");
             }
             Comanda entity = ComandaDTO.criaComanda(comanda);
@@ -116,14 +119,14 @@ public class ComandaServiceImpl implements ComandaService {
                 Mesa mesa = mesaRepository.findById(comanda.mesaId());
                 if (mesa == null || !Boolean.TRUE.equals(mesa.getAtivo())
                         || mesa.getEmpresa() == null
-                        || !mesa.getEmpresa().getId().equals(u.getEmpresa().getId())) {
+                        || !mesa.getEmpresa().getId().equals(emp.getId())) {
                     throw new Exception("Mesa inválida para esta empresa");
                 }
                 entity.setMesa(mesa);
             }
             repository.persist(entity);
-            u.getEmpresa().getCaixaAtual().getComandas().add(entity);
-            u.getEmpresa().getComandas().add(entity);
+            emp.getCaixaAtual().getComandas().add(entity);
+            emp.getComandas().add(entity);
             LOG.info("Requisicao Comandas.insert() - ok");
             return Response.ok().entity(new ComandaResponseDTO(entity)).build();
         } catch (Exception e) {
@@ -179,7 +182,8 @@ public class ComandaServiceImpl implements ComandaService {
     public List<ComandaResponseDTO> getEmAberto() {
         try {
             LOG.info("Requisição Comandas.getEmAberto()");
-            return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas().stream()
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            return emp.getComandas().stream()
                     .filter(comandas -> !comandas.getFinalizada()).filter(EntityClass::getAtivo)
                     .map(ComandaResponseDTO::new).collect(Collectors.toList());
 

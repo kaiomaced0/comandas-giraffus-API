@@ -50,8 +50,9 @@ public class ItemCompraServiceImpl implements ItemCompraService {
     @Transactional
     public ItemCompra insert(ItemCompraDTO itemCompraDTO) {
         try {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
             Produto p = produtoRepository.findById(itemCompraDTO.produtoId());
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
+            if (emp.getProdutos().contains(p)) {
 
                 ItemCompra itemCompra = new ItemCompra();
                 itemCompra.setProduto(p);
@@ -73,8 +74,9 @@ public class ItemCompraServiceImpl implements ItemCompraService {
     public Response update(ItemCompraUpdateDTO itemCompraUpdateDTO) {
 
         try {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
             Produto p = produtoRepository.findById(itemCompraUpdateDTO.produtoId());
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
+            if (emp.getProdutos().contains(p)) {
 
                 ItemCompra entity = repository.findById(itemCompraUpdateDTO.itemCompraId());
                 entity.setProduto(p);

@@ -40,7 +40,7 @@ public class ClienteServiceImpl implements ClienteService {
         String cpf = sanitizeCpf(dto.cpf());
         validateCpf(cpf);
 
-        Empresa empresa = usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa();
+        Empresa empresa = usuarioLogadoService.getEmpresaLogada();
         Optional<Cliente> existing = repository.findByEmpresaAndCpf(empresa, cpf);
 
         if (existing.isPresent()) {
@@ -74,7 +74,7 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteResponseDTO findByCpf(String cpf) {
         String sanitized = sanitizeCpf(cpf);
         validateCpf(sanitized);
-        Empresa empresa = usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa();
+        Empresa empresa = usuarioLogadoService.getEmpresaLogada();
         Cliente c = repository.findByEmpresaAndCpf(empresa, sanitized)
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
         return toResponse(c);
@@ -82,7 +82,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public List<ClienteResponseDTO> getAll() {
-        Empresa empresa = usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa();
+        Empresa empresa = usuarioLogadoService.getEmpresaLogada();
         return repository.findByEmpresa(empresa).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());

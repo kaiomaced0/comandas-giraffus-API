@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.EmpresaPagamentoDTO;
 import k.dto.EmpresaPagamentoResponseDTO;
+import k.model.Empresa;
 import k.model.EmpresaPagamento;
 import k.repository.EmpresaPagamentoRepository;
 import k.repository.EmpresaRepository;
@@ -55,9 +56,10 @@ public class EmpresaPagamentoServiceImpl implements EmpresaPagamentoService {
     @Override
     @Transactional
     public Response insert(EmpresaPagamentoDTO empresaPagamento) {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         EmpresaPagamento entity = EmpresaPagamentoDTO.criaEmpresaPagamento(empresaPagamento);
         repository.persist(entity);
-        usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getEmpresaPagamento().add(entity);
+        emp.getEmpresaPagamento().add(entity);
         return Response.ok().build();
     }
 

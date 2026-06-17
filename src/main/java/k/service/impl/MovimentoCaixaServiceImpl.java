@@ -114,8 +114,8 @@ public class MovimentoCaixaServiceImpl implements MovimentoCaixaService {
         if (caixa == null || !Boolean.TRUE.equals(caixa.getAtivo())) {
             throw new NotFoundException("Caixa não encontrado");
         }
-        Empresa empresaLogada = usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa();
-        if (empresaLogada == null || empresaLogada.getCaixas() == null
+        Empresa empresaLogada = usuarioLogadoService.getEmpresaLogada();
+        if (empresaLogada.getCaixas() == null
                 || empresaLogada.getCaixas().stream().noneMatch(c -> c != null && caixa.getId().equals(c.getId()))) {
             throw new NotFoundException("Caixa não encontrado");
         }

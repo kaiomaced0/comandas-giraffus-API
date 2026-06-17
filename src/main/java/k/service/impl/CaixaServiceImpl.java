@@ -54,9 +54,10 @@ public class CaixaServiceImpl implements CaixaService {
 
     @Override
     public List<CaixaResponseDTO> getAll() {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         try {
             LOG.info("Requisição Caixa.getAll()");
-            return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas().stream()
+            return emp.getCaixas().stream()
                     .filter(Caixa::getAtivo)
                     .map(CaixaResponseDTO::new).collect(Collectors.toList());
 
@@ -92,9 +93,10 @@ public class CaixaServiceImpl implements CaixaService {
 
     @Override
     public List<CaixaResponseDTO> getAllFechadas() {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         try {
             LOG.info("Requisição Caixa.getAll()");
-            return usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas().stream()
+            return emp.getCaixas().stream()
                     .filter(Caixa::getAtivo).filter(caixa -> caixa.getFechado())
                     .map(CaixaResponseDTO::new).collect(Collectors.toList());
 
@@ -109,8 +111,9 @@ public class CaixaServiceImpl implements CaixaService {
 
     @Override
     public CaixaResponseDTO getId(Long id) {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas()
+            if (emp.getCaixas()
                     .contains(repository.findById(id)) && repository.findById(id).getAtivo()) {
                 LOG.info("Requisição Caixa.getId()");
                 return new CaixaResponseDTO(repository.findById(id));
@@ -127,6 +130,7 @@ public class CaixaServiceImpl implements CaixaService {
     @Override
     @Transactional
     public Response insert(CaixaDTO caixaDTO) {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         try {
 
             LOG.info("Requisição Caixa.insert()");
@@ -148,8 +152,9 @@ public class CaixaServiceImpl implements CaixaService {
     @Override
     @Transactional
     public Response delete(Long id) {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas()
+            if (emp.getCaixas()
                     .contains(repository.findById(id))) {
                 Caixa entity = repository.findById(id);
                 entity.setAtivo(false);
@@ -168,8 +173,9 @@ public class CaixaServiceImpl implements CaixaService {
     @Deprecated
     @Transactional
     public Response fechar(Long id) {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixas()
+            if (emp.getCaixas()
                     .contains(repository.findById(id))) {
                 Caixa entity = repository.findById(id);
                 entity.setFechado(true);

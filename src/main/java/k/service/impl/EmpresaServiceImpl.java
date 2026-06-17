@@ -13,7 +13,6 @@ import k.dto.*;
 import k.model.Caixa;
 import k.model.Empresa;
 import k.model.Perfil;
-import k.model.Usuario;
 import k.repository.CaixaRepository;
 import k.repository.EmpresaRepository;
 import k.repository.UsuarioRepository;
@@ -84,10 +83,10 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Override
     public Response updateCaixaAtual(Long id) {
         try {
-            Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
             Caixa cx = caixaRepository.findById(id);
-            u.getEmpresa().setCaixaAtual(cx);
-            return Response.ok(new CaixaResponseDTO(u.getEmpresa().getCaixaAtual())).build();
+            emp.setCaixaAtual(cx);
+            return Response.ok(new CaixaResponseDTO(emp.getCaixaAtual())).build();
         }catch (Exception e){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -123,10 +122,9 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Transactional
     public Response updateNomeFantasia(EmpresaUpdateNomeDTO empresaUpdateNomeDTO) {
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getAdmin() == usuarioLogadoService
-                    .getPerfilUsuarioLogado()) {
-                Empresa entity = repository
-                        .findById(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId());
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            if (emp.getAdmin() == usuarioLogadoService.getPerfilUsuarioLogado()) {
+                Empresa entity = repository.findById(emp.getId());
                 entity.setNomeFantasia(empresaUpdateNomeDTO.nomeFantasia());
                 return Response.ok(new EmpresaResponseDTO(entity)).build();
             } else {

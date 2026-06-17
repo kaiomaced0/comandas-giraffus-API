@@ -161,8 +161,7 @@ public class FiscalServiceImpl implements FiscalService {
 
     @Override
     public List<DocumentoFiscalResponseDTO> getAll() {
-        Usuario logado = requireLogado();
-        Empresa empresa = logado.getEmpresa();
+        Empresa empresa = usuarioLogadoService.getEmpresaLogada();
         return repository.findByEmpresa(empresa).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());

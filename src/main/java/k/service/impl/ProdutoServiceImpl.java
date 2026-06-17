@@ -61,9 +61,9 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public List<ProdutoResponseDTO> getNome(String nome) {
-        Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         return repository.findByNome(nome).stream()
-                .filter(produto -> u.getEmpresa().getProdutos().contains(produto))
+                .filter(produto -> emp.getProdutos().contains(produto))
                 .filter(EntityClass::getAtivo)
                 .map(ProdutoResponseDTO::new)
                 .collect(Collectors.toList());
@@ -73,7 +73,8 @@ public class ProdutoServiceImpl implements ProdutoService {
     public Response getId(Long id) {
         Produto p = repository.findById(id);
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p) && p.getAtivo()) {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            if (emp.getProdutos().contains(p) && p.getAtivo()) {
                 return Response.ok(new ProdutoResponseDTO(p)).build();
             } else {
                 throw new Exception();
@@ -87,11 +88,12 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     @Transactional
     public Response insert(ProdutoDTO produto) {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         Produto p = ProdutoDTO.criaProduto(produto);
 
         p.setTipoProduto(tipoProdutoRepository.findById(produto.idTipoProduto()));
         repository.persist(p);
-        usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().add(p);
+        emp.getProdutos().add(p);
         return Response.ok(new ProdutoResponseDTO(p)).build();
 
     }
@@ -101,7 +103,8 @@ public class ProdutoServiceImpl implements ProdutoService {
     public Response update(Long idProduto, ProdutoDTO produtoDTO) {
         Produto p = repository.findById(idProduto);
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            if (emp.getProdutos().contains(p)) {
                 if(produtoDTO.nome() != null){
                     p.setNome(produtoDTO.nome());
                 }
@@ -138,7 +141,8 @@ public class ProdutoServiceImpl implements ProdutoService {
     public Response delete(Long id) {
         Produto p = repository.findById(id);
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            if (emp.getProdutos().contains(p)) {
                 p.setAtivo(false);
                 return Response.ok(new ProdutoResponseDTO(p)).build();
             } else {
@@ -154,7 +158,8 @@ public class ProdutoServiceImpl implements ProdutoService {
     public Response retiraEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO) {
         Produto p = repository.findById(produtoAdicionaRetiraDTO.id());
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            if (emp.getProdutos().contains(p)) {
                 Integer a = p.getEstoque();
                 p.setEstoque(p.getEstoque() - produtoAdicionaRetiraDTO.quantidade());
                 movimentoEstoqueService.registrar(p, TipoMovimentoEstoque.SAIDA,
@@ -173,7 +178,8 @@ public class ProdutoServiceImpl implements ProdutoService {
     public Response adicionaEstoque(ProdutoAdicionaRetiraDTO produtoAdicionaRetiraDTO) {
         Produto p = repository.findById(produtoAdicionaRetiraDTO.id());
         try {
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getProdutos().contains(p)) {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            if (emp.getProdutos().contains(p)) {
                 Integer a = p.getEstoque();
                 p.setEstoque(p.getEstoque() + produtoAdicionaRetiraDTO.quantidade());
                 movimentoEstoqueService.registrar(p, TipoMovimentoEstoque.ENTRADA,

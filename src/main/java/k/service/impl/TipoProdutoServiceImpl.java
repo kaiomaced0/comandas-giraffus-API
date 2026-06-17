@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import k.dto.TipoProdutoDTO;
 import k.dto.TipoProdutoResponseDTO;
+import k.model.Empresa;
 import k.model.TipoProduto;
 import k.repository.EmpresaRepository;
 import k.repository.TipoProdutoRepository;
@@ -33,19 +34,19 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
 
     @Override
     public List<TipoProdutoResponseDTO> getAll() {
-        return empresaRepository.findById(usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getId())
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
+        return empresaRepository.findById(emp.getId())
                 .getTipoProdutos().stream()
-                .filter(tipoProduto -> usuarioLogadoService.getPerfilUsuarioLogado()
-                        .getEmpresa().getTipoProdutos().contains(tipoProduto))
+                .filter(tipoProduto -> emp.getTipoProdutos().contains(tipoProduto))
                 .map(tipoProduto -> new TipoProdutoResponseDTO(tipoProduto.getId(), tipoProduto.getNome(), tipoProduto.getCor()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<TipoProdutoResponseDTO> getNome(String nome) {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         return repository.findByNome(nome).stream().filter(
-                tipoProduto -> usuarioLogadoService.getPerfilUsuarioLogado()
-                        .getEmpresa().getTipoProdutos().contains(tipoProduto))
+                tipoProduto -> emp.getTipoProdutos().contains(tipoProduto))
                 .map(tipoProduto -> new TipoProdutoResponseDTO(tipoProduto.getId(), tipoProduto.getNome(), tipoProduto.getCor()))
                 .collect(Collectors.toList());
     }
@@ -60,7 +61,8 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
     @Transactional
     public Response insert(TipoProdutoDTO tipoProduto) {
         TipoProduto entity = TipoProdutoDTO.criaTipoProduto(tipoProduto);
-        usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getTipoProdutos().add(entity);
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
+        emp.getTipoProdutos().add(entity);
         repository.persist(entity);
         return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome(), entity.getCor())).build();
     }
@@ -70,8 +72,9 @@ public class TipoProdutoServiceImpl implements TipoProdutoService {
     public Response update(Long idTipoProduto, TipoProdutoDTO tipoProduto) {
         try {
             LOG.info("Entrou no update tipoproduto nome:" +tipoProduto.nome() + "  cor:" + tipoProduto.cor() + " .");
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
             TipoProduto entity = repository.findById(idTipoProduto);
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getTipoProdutos().contains(entity)) {
+            if (emp.getTipoProdutos().contains(entity)) {
                 entity.setNome(tipoProduto.nome());
                 entity.setCor(tipoProduto.cor());
                 return Response.ok(new TipoProdutoResponseDTO(entity.getId(), entity.getNome(), entity.getCor())).build();

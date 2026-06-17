@@ -56,9 +56,9 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public List<PedidoResponseDTO> getAll() {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         return repository.findAll().stream()
-                .filter(pedido -> usuarioLogadoService.getPerfilUsuarioLogado()
-                        .getEmpresa().getComandas().contains(pedido.getComanda()))
+                .filter(pedido -> emp.getComandas().contains(pedido.getComanda()))
                 .map(PedidoResponseDTO::new).collect(Collectors.toList());
 
     }
@@ -68,8 +68,8 @@ public class PedidoServiceImpl implements PedidoService {
         Pedido p = repository.findById(id);
         try {
 
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas()
-                    .contains(p.getComanda())) {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            if (emp.getComandas().contains(p.getComanda())) {
                 return Response.ok(new PedidoResponseDTO(p)).build();
             } else {
                 throw new Exception();
@@ -83,9 +83,9 @@ public class PedidoServiceImpl implements PedidoService {
     @Transactional
     public Response insert(PedidoDTO pedidoDTO) {
         try {
-            Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
             Comanda comanda = comandaRepository.findById(pedidoDTO.idComanda());
-            if (!u.getEmpresa().getComandas().contains(comanda)) {
+            if (!emp.getComandas().contains(comanda)) {
                 throw new Exception();
             }
             Pedido pedido = new Pedido();
@@ -124,8 +124,8 @@ public class PedidoServiceImpl implements PedidoService {
         try {
 
             Pedido pedido = repository.findById(id);
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getComandas()
-                    .contains(pedido.getComanda())) {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
+            if (emp.getComandas().contains(pedido.getComanda())) {
 
                 repository.deleteById(id);
                 comandaService.updatePreco(pedido.getComanda().getId());
@@ -190,11 +190,11 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public List<PedidoResponseDTO> getAbertos() {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         return repository.findAll().stream()
-                .filter(pedido -> usuarioLogadoService.getPerfilUsuarioLogado()
-                        .getEmpresa().getComandas().contains(pedido.getComanda()))
+                .filter(pedido -> emp.getComandas().contains(pedido.getComanda()))
                 .filter(pedido -> !pedido.getComanda().getFinalizada()).
-                filter(pedido -> usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa().getCaixaAtual().getComandas().contains(pedido.getComanda()))
+                filter(pedido -> emp.getCaixaAtual().getComandas().contains(pedido.getComanda()))
                 .map(PedidoResponseDTO::new).collect(Collectors.toList());
 
     }

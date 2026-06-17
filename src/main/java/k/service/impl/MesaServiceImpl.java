@@ -34,7 +34,7 @@ public class MesaServiceImpl implements MesaService {
 
     @Override
     public List<MesaResponseDTO> getAll() {
-        Empresa empresa = usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa();
+        Empresa empresa = usuarioLogadoService.getEmpresaLogada();
         return repository.findByEmpresa(empresa).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class MesaServiceImpl implements MesaService {
         if (dto == null || dto.identificador() == null || dto.identificador().isBlank()) {
             throw new WebApplicationException("Identificador é obrigatório", Response.Status.BAD_REQUEST);
         }
-        Empresa empresa = usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa();
+        Empresa empresa = usuarioLogadoService.getEmpresaLogada();
         validateUnique(empresa, dto.identificador().trim(), null);
 
         Mesa entity = new Mesa();

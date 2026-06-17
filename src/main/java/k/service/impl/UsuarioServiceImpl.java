@@ -15,6 +15,7 @@ import k.dto.UsuarioDTO;
 import k.dto.UsuarioResponseDTO;
 import k.dto.UsuarioUpdateNomeGerenteDTO;
 import k.dto.UsuarioUpdateSenhaGerenteDTO;
+import k.model.Empresa;
 import k.model.Perfil;
 import k.model.Usuario;
 import k.repository.EmpresaRepository;
@@ -59,9 +60,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     public List<UsuarioResponseDTO> getNome(String nome) {
         try {
             LOG.info("Requisicao Usuario.getAll()");
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
             return repository.findByNome(nome).stream()
-                    .filter(usuario -> usuario.getEmpresa().getId() == usuarioLogadoService.getPerfilUsuarioLogado()
-                            .getEmpresa().getId())
+                    .filter(usuario -> usuario.getEmpresa().getId() == emp.getId())
                     .map(UsuarioResponseDTO::new).collect(Collectors.toList());
 
         } catch (Exception e) {
@@ -156,11 +157,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     public Response delete(Long id) {
         try {
+            Empresa emp = usuarioLogadoService.getEmpresaLogada();
             Usuario entity = repository.findById(id);
-            if (usuarioLogadoService.getPerfilUsuarioLogado().getEmpresa() == entity.getEmpresa()) {
-                if (usuarioLogadoService.getPerfilUsuarioLogado().getId() == usuarioLogadoService
-                        .getPerfilUsuarioLogado()
-                        .getEmpresa().getAdmin().getId()) {
+            if (emp == entity.getEmpresa()) {
+                if (usuarioLogadoService.getPerfilUsuarioLogado().getId() == emp.getAdmin().getId()) {
                     if (usuarioLogadoService.getPerfilUsuarioLogado().getId() != entity.getId()) {
                         repository.delete(entity);
                         LOG.info("Requisicao Usuario.delete()");

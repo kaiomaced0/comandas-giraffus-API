@@ -81,9 +81,9 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     @Override
     public List<PagamentoResponseDTO> getAll() {
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         return repository.findAll().stream()
-                .filter(pagamento -> pagamento.getUsuarioCaixa().getEmpresa() == usuarioLogadoService
-                        .getPerfilUsuarioLogado().getEmpresa())
+                .filter(pagamento -> pagamento.getUsuarioCaixa().getEmpresa() == emp)
                 .filter(EntityClass::getAtivo)
                 .map(pagamento -> new PagamentoResponseDTO(pagamento.getComanda().getId(),
                         pagamento.getPagamentoRealizado(), pagamento.getFormaPagamento(),
@@ -103,9 +103,9 @@ public class PagamentoServiceImpl implements PagamentoService {
     @Override
     @Transactional
     public Response insert(PagamentoDTO pagamentoDTO) {
-        Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
+        Empresa emp = usuarioLogadoService.getEmpresaLogada();
         try {
-            if (u.getEmpresa().getCaixaAtual() == null) {
+            if (emp.getCaixaAtual() == null) {
                 throw new Exception("Caixa atual não existe!");
             }
             Pagamento entity = new Pagamento();
