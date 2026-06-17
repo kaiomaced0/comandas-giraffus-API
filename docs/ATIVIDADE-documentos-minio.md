@@ -1,8 +1,10 @@
 # Atividade — Gestão de documentos/arquivos com MinIO (object storage)
 
-> **Status:** 🟡 PLANEJADA (atividades definidas; aguardando priorização para implementar).
+> **Status:** 🟢 EM ANDAMENTO — **ATI-1, ATI-2 e ATI-3 implementadas (2026-06-17)**; falta ATI-4 (casos de uso de domínio), ATI-5 (web), ATI-6 (hardening prod) e teste de runtime contra o MinIO gerenciado.
 > **Origem:** solicitação do Kaio (2026-06-10) — "temos controle de documentos? veja viabilidade e crie atividades p/ MinIO, garantindo segurança sempre".
 > **Escopo:** API Quarkus (broker de storage) + comandas-web (upload/preview). Multi-tenant.
+
+> **Decisões tomadas (2026-06-17):** SDK oficial `io.minio:minio` (não a extensão); **bucket único** + prefixo por empresa; **antimalware = risco aceito** (TODO, não implementado); MinIO é **serviço gerenciado** (env). Credenciais de teste em `.env` local (gitignored); produção usará outras via env.
 
 ## 1. Estado atual (diagnóstico)
 
@@ -57,14 +59,14 @@
 
 ## 5. Atividades (ATIs) — ordem sugerida
 
-### ATI-1 — Infra MinIO (dev) 🟡
-Subir MinIO via Docker (compose ou Quarkus Dev Services), bucket privado `comandas`, credenciais em env (`MINIO_URL`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_BUCKET`). **Pronto quando:** MinIO acessível em dev, bucket criado, console acessível, sem acesso público.
+### ATI-1 — Infra MinIO (config) ✅ FEITO 2026-06-17
+SDK `io.minio:minio:8.5.7` + `k.storage.MinioProducer` (config via `comandas.minio.*` ← env `MINIO_SERVER_URL`/`MINIO_ROOT_USER`/`MINIO_ROOT_PASSWORD`/`MINIO_BUCKET`). `.env` local (gitignored) com as credenciais de teste do MinIO gerenciado. Sem segredo em `application.properties`. *(Pendente runtime: confirmar conectividade/permissão `makeBucket` no serviço gerenciado.)*
 
-### ATI-2 — Camada de storage + metadados na API 🟡
-Adicionar extensão (`quarkus-minio` ou SDK), `StorageService` (abstração: `upload(empresaId, tipo, bytes, contentType, nome) → objectKey`; `presignedGet(objectKey, ttl)`; `delete(objectKey)`), entidade `Documento` + repository. Chave sempre prefixada por empresa. **Pronto quando:** upload/download programático funciona com isolamento por prefixo; metadados persistidos.
+### ATI-2 — Camada de storage + metadados na API ✅ FEITO 2026-06-17
+`StorageService`/`MinioStorageService` (`upload`/`presignedGet`/`delete`, garante bucket), entidade `Documento` (+ enum `TipoDocumento`) + `DocumentoRepository`. Chave sempre prefixada por empresa.
 
-### ATI-3 — Endpoints seguros 🟡
-`POST /documentos` (multipart; valida tipo/tamanho/extensão/sniffing; `@RolesAllowed`); `GET /documentos` (lista da empresa); `GET /documentos/{id}/url` (presigned TTL curto + checagem de posse); `DELETE /documentos/{id}` (soft + expurgo). **Pronto quando:** nenhum acesso cross-tenant; cliente sem credenciais; limites aplicados. Testes de isolamento e de validação.
+### ATI-3 — Endpoints seguros ✅ FEITO 2026-06-17
+`POST /documentos` (multipart; valida content-type allowlist + tamanho ≤10MB + sanitiza nome; `@RolesAllowed`); `GET /documentos` (lista da empresa); `GET /documentos/{id}/url` (presigned GET TTL 300s + checagem de posse); `PATCH /documentos/delete/{id}` (storage delete + soft delete). 9 testes incl. não-vazamento cross-tenant. *(Pendente: teste de runtime do upload multipart com JWT real.)*
 
 ### ATI-4 — Casos de uso de domínio 🟡
 Imagem de produto (campo `Produto.imagemDocumentoId`, mantendo `linkimage` como fallback), logo da empresa, PDF de documento fiscal (gerar + guardar no MinIO; ligar ao "Imprimir PDF" da Onda I). **Pronto quando:** produto/empresa usam objeto do MinIO via presigned URL.
@@ -78,10 +80,14 @@ SSE + TLS no MinIO, política de bucket deny-public revisada, rotação de crede
 ### ATI-7 — Testes 🟡
 Unit do `StorageService` (com MinIO de teste/Testcontainers ou fake), validação de limites/tipos, **teste de não-vazamento multi-tenant** (empresa A não acessa objeto de B), TTL de presigned. **Pronto quando:** suíte verde cobrindo segurança e isolamento.
 
-## 6. Decisões a confirmar com o Kaio
-- Extensão: **`quarkus-minio`** (recomendado) vs `quarkus-amazon-s3` vs SDK puro.
-- Isolamento: **bucket único + prefixo** (recomendado) vs bucket por empresa.
-- Antimalware (ClamAV) entra no MVP ou fica como risco aceito em dev?
-- Onde rodar o MinIO em produção (mesmo host? serviço gerenciado?).
+## 6. Decisões (tomadas em 2026-06-17)
+- Cliente: **SDK oficial `io.minio:minio`** (não a extensão Quarkiverse) ✔
+- Isolamento: **bucket único + prefixo por empresa** ✔
+- Antimalware: **risco aceito** (não implementado; TODO) ✔
+- MinIO: **serviço gerenciado** (env). Teste: `https://teste1-minio.swm3im.easypanel.host` (creds em `.env` local). Produção usará outras credenciais via env ✔
 
-> Nada implementado ainda — este documento define as atividades. Ao priorizar, começar por ATI-1 → ATI-2 → ATI-3 (base segura) antes dos casos de uso.
+## 7. Próximos passos
+- **ATI-4** — usar nos domínios: imagem de produto (campo `Produto.imagemDocumentoId`, mantendo `linkimage` como fallback), logo da empresa, PDF do documento fiscal.
+- **ATI-5** — web: UI de upload + preview via presigned URL.
+- **ATI-6** — hardening de produção: usar **access key escopado** (não root) com policy restrita ao bucket, SSE, TLS, rotação, auditoria, lifecycle de órfãos, rate limit.
+- **Runtime (você):** confirmar conectividade/credenciais contra o MinIO gerenciado; em prod criar a tabela `documento` (em `%dev` o drop-and-create cuida).
