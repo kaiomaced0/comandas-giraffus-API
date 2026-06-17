@@ -33,26 +33,27 @@ public class AuthResource {
     @POST
     @PermitAll
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response login(AuthUsuarioDTO authDTO) {
-        Usuario usuario = new Usuario();
-        usuario = usuarioService
-                .findByLoginAndSenha(authDTO);
+        Usuario usuario = usuarioService.findByLoginAndSenha(authDTO);
 
         if (usuario == null) {
             usuario = usuarioService.findByEmailAndSenha(authDTO);
             if (usuario == null) {
-                return Response.status(Status.NO_CONTENT)
-                        .entity("Usuario não encontrado").build();
+                return Response.status(Status.UNAUTHORIZED)
+                        .entity("{\"error\":\"Usuario nao encontrado\"}").build();
             }
-
-        } else if (!usuario.getAtivo()) {
-            return Response.status(Status.NO_CONTENT)
-                    .entity("Usuario Inativo").build();
         }
-        return Response.ok()
-                .header("Authorization", tokenService.generateJwt(usuario))
-                .build();
 
+        if (!usuario.getAtivo()) {
+            return Response.status(Status.UNAUTHORIZED)
+                    .entity("{\"error\":\"Usuario inativo\"}").build();
+        }
+
+        String token = tokenService.generateJwt(usuario);
+        return Response.ok()
+                .header("Authorization", token)
+                .entity("{\"token\":\"" + token + "\"}")
+                .build();
     }
 }

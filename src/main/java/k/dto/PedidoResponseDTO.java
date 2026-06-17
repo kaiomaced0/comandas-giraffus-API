@@ -1,5 +1,6 @@
 package k.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,14 +14,15 @@ public record PedidoResponseDTO(
                 String observacao,
                 String status,
                 Integer quantidadePessoas,
-                Double valor) {
+                Double valor,
+                LocalDateTime dataInclusao) {
         public PedidoResponseDTO(Pedido pedido) {
                 this(pedido.getId(), pedido.getComanda().getNome(), (pedido.getItemCompras().stream()
                                 .map(itemCompra -> new ItemCompraResponseDTO(itemCompra.getId(),itemCompra.getProduto().getId(),
                                                 itemCompra.getProduto().getNome(),
                                                 itemCompra.getQuantidade(), itemCompra.getPreco()))
                                 .collect(Collectors.toList())), pedido.getObservacao(), pedido.getStatusPedido().getLabel(),
-                                pedido.getQuantidadePessoas(), pedido.getValor());
+                                pedido.getQuantidadePessoas(), pedido.getValor(), pedido.getDataInclusao());
         }
 
 }
