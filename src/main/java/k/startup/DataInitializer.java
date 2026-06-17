@@ -417,7 +417,7 @@ public class DataInitializer {
         ic.setPedido(pedido);
         em.persist(ic);
         em.flush();
-        vincular("item_compra", "lista_itemcompra_pedido", pedido.getId(), ic.getId());
+        vincular("itemcompra", "lista_itemcompra_pedido", pedido.getId(), ic.getId());
         return ic;
     }
 
