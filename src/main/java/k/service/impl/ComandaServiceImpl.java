@@ -73,7 +73,7 @@ public class ComandaServiceImpl implements ComandaService {
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Comandas.getAll()");
-            return null;
+            return List.of();
         }
     }
 
@@ -87,7 +87,7 @@ public class ComandaServiceImpl implements ComandaService {
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisicao Comandas.getAll()");
-            return null;
+            return List.of();
         }
     }
 
@@ -185,7 +185,7 @@ public class ComandaServiceImpl implements ComandaService {
 
         } catch (Exception e) {
             LOG.error("Erro ao rodar Requisição Comandas.getEmAberto()");
-            return null;
+            return List.of();
         }
     }
 

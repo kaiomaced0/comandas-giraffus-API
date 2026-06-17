@@ -51,6 +51,9 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     public List<ProdutoResponseDTO> getAll() {
         Usuario u = usuarioLogadoService.getPerfilUsuarioLogado();
+        if (u == null || u.getEmpresa() == null) {
+            return List.of();
+        }
         return u.getEmpresa().getProdutos().stream().filter(EntityClass::getAtivo)
                 .map(ProdutoResponseDTO::new)
                 .collect(Collectors.toList());

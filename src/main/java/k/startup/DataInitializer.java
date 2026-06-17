@@ -153,6 +153,10 @@ public class DataInitializer {
         emmaFerreira.setEmpresa(emp8);
         isabellaGomes.setEmpresa(emp9);
 
+        // Conta dev MASTER tambem pertence a emp1 (que recebe o seed completo),
+        // para conseguir testar as telas operacionais logada como "admin".
+        admin.setEmpresa(emp1);
+
         // ==================== Produtos ====================
         List<Empresa> empresas = List.of(emp1, emp2, emp3, emp4, emp5, emp6, emp7, emp8, emp9);
 
