@@ -1,5 +1,9 @@
 package k.startup;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -9,9 +13,29 @@ import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import k.model.AmbienteGateway;
+import k.model.Caixa;
+import k.model.Cliente;
+import k.model.Comanda;
+import k.model.DocumentoFiscal;
 import k.model.Empresa;
+import k.model.EmpresaGatewayConfig;
+import k.model.FormaPagamento;
+import k.model.ItemCompra;
+import k.model.Mesa;
+import k.model.ModoPagamento;
+import k.model.MovimentoCaixa;
+import k.model.Pagamento;
+import k.model.PagamentoItem;
+import k.model.Pedido;
 import k.model.Perfil;
 import k.model.Produto;
+import k.model.StatusDocumentoFiscal;
+import k.model.StatusPedido;
+import k.model.TipoDocumentoFiscal;
+import k.model.TipoGateway;
+import k.model.TipoMovimentoCaixa;
+import k.model.TipoProduto;
 import k.model.Usuario;
 import k.service.HashService;
 
@@ -172,7 +196,304 @@ public class DataInitializer {
         }
 
         em.flush();
+
+        // ==================== Operacao completa (emp1 e emp2) ====================
+        // Cozinha (perfil ausente no seed base) + vinculo de funcionarios as empresas
+        Usuario cozinhaEmp1 = criarUsuario("Cozinha Empresa 1", "cozinha1@dominio.com", "cozinha1", "0000000", senhaHash);
+        Usuario cozinhaEmp2 = criarUsuario("Cozinha Empresa 2", "cozinha2@dominio.com", "cozinha2", "0000000", senhaHash);
+        cozinhaEmp1.setPerfis(Set.of(Perfil.COZINHA));
+        cozinhaEmp2.setPerfis(Set.of(Perfil.COZINHA));
+
+        sophiaMartins.setEmpresa(emp1);
+        lucasFerreira.setEmpresa(emp1);
+        cozinhaEmp1.setEmpresa(emp1);
+        avaOliveira.setEmpresa(emp2);
+        alexanderCorreia.setEmpresa(emp2);
+        cozinhaEmp2.setEmpresa(emp2);
+        em.flush();
+
+        popularEmpresa(emp1, sophiaMartins, lucasFerreira, 1);
+        popularEmpresa(emp2, avaOliveira, alexanderCorreia, 2);
+
+        em.flush();
         LOG.info("Dados de desenvolvimento inicializados com sucesso. Senha de todos os usuarios: 123456");
+    }
+
+    /** Vincula um relacionamento unidirecional (colecao @OneToMany @JoinColumn no lado pai) via UPDATE. */
+    private void vincular(String tabela, String coluna, Long fkId, Long rowId) {
+        em.createNativeQuery("UPDATE " + tabela + " SET " + coluna + " = :fk WHERE id = :id")
+                .setParameter("fk", fkId)
+                .setParameter("id", rowId)
+                .executeUpdate();
+    }
+
+    /**
+     * Popula o fluxo operacional completo de uma empresa: tipos, produtos, mesas,
+     * caixa aberto (+ movimentos) e fechado, comandas com pedidos em varios status
+     * (KDS), pagamento simples, rateado e estornado, cliente + documento fiscal e
+     * configuracoes de gateway.
+     */
+    private void popularEmpresa(Empresa emp, Usuario garcom, Usuario caixaUser, int n) {
+        // ---- Tipos de produto ----
+        TipoProduto tBebidas = new TipoProduto();
+        tBebidas.setNome("Bebidas");
+        tBebidas.setCor("#3b82f6");
+        em.persist(tBebidas);
+        TipoProduto tComidas = new TipoProduto();
+        tComidas.setNome("Comidas");
+        tComidas.setCor("#ef4444");
+        em.persist(tComidas);
+        em.flush();
+        vincular("tipoproduto", "tipoproduto_empresa", emp.getId(), tBebidas.getId());
+        vincular("tipoproduto", "tipoproduto_empresa", emp.getId(), tComidas.getId());
+
+        // ---- Produtos (com tipo) ----
+        Produto cerveja = criarProduto("Cerveja", IMG_BEBIDA, 200, 4.0, 10.0, emp);
+        Produto refri = criarProduto("Refrigerante", IMG_BEBIDA, 150, 3.0, 8.0, emp);
+        Produto burger = criarProduto("Hamburguer", IMG_HAMBURGUER, 80, 12.0, 28.0, emp);
+        Produto porcao = criarProduto("Porcao de Batata", IMG_HAMBURGUER, 60, 8.0, 20.0, emp);
+        cerveja.setTipoProduto(tBebidas);
+        refri.setTipoProduto(tBebidas);
+        burger.setTipoProduto(tComidas);
+        porcao.setTipoProduto(tComidas);
+
+        // ---- Mesas ----
+        Mesa mesa1 = criarMesa("Mesa 1", 4, emp);
+        Mesa mesa2 = criarMesa("Mesa 2", 2, emp);
+        Mesa balcao = criarMesa("Balcao", 1, emp);
+
+        // ---- Caixa aberto (do caixaUser) + movimentos ----
+        Caixa caixa = new Caixa();
+        caixa.setNome("Caixa " + caixaUser.getNome());
+        caixa.setFechado(false);
+        caixa.setValorTotal(0.0);
+        caixa.setDataCaixa(LocalDate.now());
+        caixa.setUsuario(caixaUser);
+        caixa.setValorAbertura(new BigDecimal("100.00"));
+        caixa.setHoraAbertura(LocalDateTime.now());
+        em.persist(caixa);
+        em.flush();
+        vincular("caixa", "lista_caixa_empresa", emp.getId(), caixa.getId());
+        emp.setCaixaAtual(caixa);
+        criarMovimento(TipoMovimentoCaixa.SUPRIMENTO, "50.00", "Reforco de troco", caixa, caixaUser);
+        criarMovimento(TipoMovimentoCaixa.SANGRIA, "30.00", "Sangria para o cofre", caixa, caixaUser);
+
+        // ---- Caixa fechado (historico, com diferenca) ----
+        Caixa caixaFechado = new Caixa();
+        caixaFechado.setNome("Caixa do dia anterior");
+        caixaFechado.setFechado(true);
+        caixaFechado.setValorTotal(540.0);
+        caixaFechado.setDataCaixa(LocalDate.now().minusDays(1));
+        caixaFechado.setUsuario(caixaUser);
+        caixaFechado.setValorAbertura(new BigDecimal("100.00"));
+        caixaFechado.setValorFechamentoEsperado(new BigDecimal("640.00"));
+        caixaFechado.setValorFechamentoInformado(new BigDecimal("635.00"));
+        caixaFechado.setDiferenca(new BigDecimal("-5.00"));
+        caixaFechado.setHoraAbertura(LocalDateTime.now().minusDays(1).withHour(8).withMinute(0));
+        caixaFechado.setHoraFechamento(LocalDateTime.now().minusDays(1).withHour(23).withMinute(0));
+        caixaFechado.setObservacoesFechamento("Pequena diferenca de troco.");
+        caixaFechado.setFechadoPor(caixaUser);
+        em.persist(caixaFechado);
+        em.flush();
+        vincular("caixa", "lista_caixa_empresa", emp.getId(), caixaFechado.getId());
+
+        // ---- Comandas abertas com pedidos em varios status (alimenta o KDS) ----
+        Comanda cmd1 = criarComanda("Joao", mesa1, garcom, emp, false);
+        criarPedido(cmd1, StatusPedido.AGUARDANDO, new Produto[] { cerveja, burger }, new int[] { 2, 1 });
+        criarPedido(cmd1, StatusPedido.PREPARANDO, new Produto[] { porcao }, new int[] { 1 });
+        atualizarPrecoComanda(cmd1);
+
+        Comanda cmd2 = criarComanda("Maria", mesa1, garcom, emp, false);
+        criarPedido(cmd2, StatusPedido.PRONTO, new Produto[] { refri, burger }, new int[] { 3, 2 });
+        atualizarPrecoComanda(cmd2);
+
+        Comanda cmd3 = criarComanda("Mesa 2 - cliente", mesa2, garcom, emp, false);
+        criarPedido(cmd3, StatusPedido.AGUARDANDO, new Produto[] { refri }, new int[] { 1 });
+        atualizarPrecoComanda(cmd3);
+
+        // ---- Comanda finalizada com pagamento SIMPLES (PIX) ----
+        Comanda cmdPaga = criarComanda("Conta fechada (PIX)", balcao, garcom, emp, false);
+        criarPedido(cmdPaga, StatusPedido.ENTREGUE, new Produto[] { burger, cerveja }, new int[] { 1, 2 });
+        atualizarPrecoComanda(cmdPaga);
+        Pagamento pgSimples = criarPagamentoSimples(cmdPaga, caixa, caixaUser, FormaPagamento.PIX);
+
+        // ---- Comanda com pagamento RATEADO por itens ----
+        Comanda cmdRateada = criarComanda("Rateado por itens", mesa2, garcom, emp, false);
+        Pedido pedRateado = criarPedidoVazio(cmdRateada, StatusPedido.ENTREGUE);
+        ItemCompra itBurger = criarItem(pedRateado, burger, 2);
+        ItemCompra itRefri = criarItem(pedRateado, refri, 2);
+        pedRateado.setValor(itBurger.getPreco() + itRefri.getPreco());
+        atualizarPrecoComanda(cmdRateada);
+        criarPagamentoRateado(cmdRateada, List.of(itBurger, itRefri), caixa, caixaUser);
+
+        // ---- Comanda com pagamento ESTORNADO (historico) ----
+        Comanda cmdEstorno = criarComanda("Pagamento estornado", balcao, garcom, emp, false);
+        criarPedido(cmdEstorno, StatusPedido.ENTREGUE, new Produto[] { cerveja }, new int[] { 1 });
+        atualizarPrecoComanda(cmdEstorno);
+        Pagamento pgEstornado = criarPagamentoSimples(cmdEstorno, caixa, caixaUser, FormaPagamento.CREDITO);
+        pgEstornado.setEstornado(true);
+
+        // ---- Cliente + Documento fiscal emulado sobre a comanda paga ----
+        Cliente cliente = new Cliente();
+        cliente.setNome("Cliente Nota " + n);
+        cliente.setCpf("1234567890" + n);
+        cliente.setEmail("cliente" + n + "@exemplo.com");
+        cliente.setEmpresa(emp);
+        em.persist(cliente);
+
+        DocumentoFiscal doc = new DocumentoFiscal();
+        doc.setTipo(TipoDocumentoFiscal.NFCE);
+        doc.setComanda(cmdPaga);
+        doc.setCliente(cliente);
+        doc.setEmpresa(emp);
+        doc.setNumero("00000" + n);
+        doc.setChaveAcesso("3525" + n + "0000000000000000000000000000000000000000");
+        doc.setStatusEmissao(StatusDocumentoFiscal.EMITIDO);
+        doc.setEmulado(true);
+        doc.setEmitidoEm(LocalDateTime.now());
+        doc.setUsuarioEmissao(caixaUser);
+        doc.setPagamentos(new ArrayList<>(List.of(pgSimples)));
+        em.persist(doc);
+
+        // ---- Gateways de pagamento (config) ----
+        criarGateway(emp, TipoGateway.ASAAS, AmbienteGateway.SANDBOX, "asaas_sandbox_key_" + n, true);
+        criarGateway(emp, TipoGateway.ABACATE_PAY, AmbienteGateway.SANDBOX, "abacate_sandbox_key_" + n, false);
+
+        em.flush();
+    }
+
+    private Mesa criarMesa(String identificador, int capacidade, Empresa empresa) {
+        Mesa m = new Mesa();
+        m.setIdentificador(identificador);
+        m.setCapacidade(capacidade);
+        m.setEmpresa(empresa);
+        em.persist(m);
+        return m;
+    }
+
+    private Comanda criarComanda(String nome, Mesa mesa, Usuario atendente, Empresa empresa, boolean finalizada) {
+        Comanda c = new Comanda();
+        c.setNome(nome);
+        c.setFinalizada(finalizada);
+        c.setTaxaServico(false);
+        c.setMesa(mesa);
+        c.setAtendente(atendente);
+        c.setPreco(0.0);
+        em.persist(c);
+        em.flush();
+        vincular("comanda", "lista_comanda_empresa", empresa.getId(), c.getId());
+        return c;
+    }
+
+    private Pedido criarPedidoVazio(Comanda comanda, StatusPedido status) {
+        Pedido p = new Pedido();
+        p.setStatusPedido(status);
+        p.setObservacao("");
+        p.setQuantidadePessoas(1);
+        p.setValor(0.0);
+        p.setComanda(comanda);
+        em.persist(p);
+        em.flush();
+        vincular("pedido", "lista_pedido_comanda", comanda.getId(), p.getId());
+        return p;
+    }
+
+    private Pedido criarPedido(Comanda comanda, StatusPedido status, Produto[] produtos, int[] quantidades) {
+        Pedido p = criarPedidoVazio(comanda, status);
+        double total = 0.0;
+        for (int i = 0; i < produtos.length; i++) {
+            ItemCompra item = criarItem(p, produtos[i], quantidades[i]);
+            total += item.getPreco();
+        }
+        p.setValor(total);
+        return p;
+    }
+
+    private ItemCompra criarItem(Pedido pedido, Produto produto, int quantidade) {
+        ItemCompra ic = new ItemCompra();
+        ic.setProduto(produto);
+        ic.setQuantidade(quantidade);
+        ic.setPreco(produto.getValorVenda() * quantidade);
+        ic.setPedido(pedido);
+        em.persist(ic);
+        em.flush();
+        vincular("item_compra", "lista_itemcompra_pedido", pedido.getId(), ic.getId());
+        return ic;
+    }
+
+    private void atualizarPrecoComanda(Comanda comanda) {
+        Double total = em.createQuery(
+                "SELECT SUM(p.valor) FROM Pedido p WHERE p.comanda = :c", Double.class)
+                .setParameter("c", comanda)
+                .getSingleResult();
+        comanda.setPreco(total == null ? 0.0 : total);
+    }
+
+    private void criarMovimento(TipoMovimentoCaixa tipo, String valor, String motivo, Caixa caixa, Usuario usuario) {
+        MovimentoCaixa mv = new MovimentoCaixa();
+        mv.setTipo(tipo);
+        mv.setValor(new BigDecimal(valor));
+        mv.setMotivo(motivo);
+        mv.setCaixa(caixa);
+        mv.setUsuario(usuario);
+        em.persist(mv);
+    }
+
+    private Pagamento criarPagamentoSimples(Comanda comanda, Caixa caixa, Usuario caixaUser, FormaPagamento forma) {
+        double valor = comanda.getPreco() == null ? 0.0 : comanda.getPreco();
+        Pagamento pg = new Pagamento();
+        pg.setComanda(comanda);
+        pg.setCaixa(caixa);
+        pg.setUsuarioCaixa(caixaUser);
+        pg.setModo(ModoPagamento.SIMPLES);
+        pg.setFormaPagamento(forma);
+        pg.setValorTotal(BigDecimal.valueOf(valor));
+        pg.setValorPagamento(valor);
+        pg.setValorGorjeta(0.0);
+        pg.setPagamentoRealizado(true);
+        pg.setEstornado(false);
+        em.persist(pg);
+        comanda.setFinalizada(true);
+        comanda.setPagamento(pg);
+        return pg;
+    }
+
+    private Pagamento criarPagamentoRateado(Comanda comanda, List<ItemCompra> itens, Caixa caixa, Usuario caixaUser) {
+        double total = itens.stream().mapToDouble(ItemCompra::getPreco).sum();
+        Pagamento pg = new Pagamento();
+        pg.setComanda(comanda);
+        pg.setCaixa(caixa);
+        pg.setUsuarioCaixa(caixaUser);
+        pg.setModo(ModoPagamento.RATEADO);
+        pg.setFormaPagamento(FormaPagamento.DEBITO);
+        pg.setValorTotal(BigDecimal.valueOf(total));
+        pg.setValorPagamento(total);
+        pg.setValorGorjeta(0.0);
+        pg.setPagamentoRealizado(true);
+        pg.setEstornado(false);
+        em.persist(pg);
+        for (ItemCompra item : itens) {
+            PagamentoItem pi = new PagamentoItem();
+            pi.setPagamento(pg);
+            pi.setItemCompra(item);
+            pi.setQuantidade(item.getQuantidade());
+            pi.setValorAbatido(BigDecimal.valueOf(item.getPreco()));
+            em.persist(pi);
+        }
+        comanda.setFinalizada(true);
+        comanda.setPagamento(pg);
+        return pg;
+    }
+
+    private void criarGateway(Empresa empresa, TipoGateway tipo, AmbienteGateway ambiente, String apiKey, boolean habilitado) {
+        EmpresaGatewayConfig cfg = new EmpresaGatewayConfig();
+        cfg.setEmpresa(empresa);
+        cfg.setTipo(tipo);
+        cfg.setAmbiente(ambiente);
+        cfg.setApiKey(apiKey);
+        cfg.setApiSecret("secret_" + apiKey);
+        cfg.setHabilitado(habilitado);
+        em.persist(cfg);
     }
 
     private Usuario criarUsuario(String nome, String email, String login, String cpf, String senhaHash) {
