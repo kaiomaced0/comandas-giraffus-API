@@ -1,6 +1,6 @@
 # Atividade — Gestão de documentos/arquivos com MinIO (object storage)
 
-> **Status:** 🟢 EM ANDAMENTO — **ATI-1, ATI-2 e ATI-3 implementadas (2026-06-17)**; falta ATI-4 (casos de uso de domínio), ATI-5 (web), ATI-6 (hardening prod) e teste de runtime contra o MinIO gerenciado.
+> **Status:** 🟢 EM ANDAMENTO — **ATI-1, ATI-2, ATI-3 e parte da ATI-4/ATI-5 (imagem de produto) implementadas (2026-06-17)**; falta o resto da ATI-4 (logo da empresa, PDF fiscal), ATI-6 (hardening prod) e teste de runtime contra o MinIO gerenciado.
 > **Origem:** solicitação do Kaio (2026-06-10) — "temos controle de documentos? veja viabilidade e crie atividades p/ MinIO, garantindo segurança sempre".
 > **Escopo:** API Quarkus (broker de storage) + comandas-web (upload/preview). Multi-tenant.
 
@@ -87,7 +87,9 @@ Unit do `StorageService` (com MinIO de teste/Testcontainers ou fake), validaçã
 - MinIO: **serviço gerenciado** (env). Teste: `https://teste1-minio.swm3im.easypanel.host` (creds em `.env` local). Produção usará outras credenciais via env ✔
 
 ## 7. Próximos passos
-- **ATI-4** — usar nos domínios: imagem de produto (campo `Produto.imagemDocumentoId`, mantendo `linkimage` como fallback), logo da empresa, PDF do documento fiscal.
-- **ATI-5** — web: UI de upload + preview via presigned URL.
+- **ATI-4** — usar nos domínios:
+  - ✅ **Imagem de produto (2026-06-17):** `Produto.imagemDocumentoId` (fallback `linkimage`); upload no `ProdutoFormDialog` (`POST /documentos` PRODUTO_IMAGEM) e exibição via presigned URL (`DocumentoImagem`).
+  - ⛔ logo da empresa; ⛔ PDF do documento fiscal.
+- **ATI-5** — web: ✅ base feita para produto (`features/documentos`: upload + `DocumentoImagem` + presigned). Falta aplicar em empresa/fiscal.
 - **ATI-6** — hardening de produção: usar **access key escopado** (não root) com policy restrita ao bucket, SSE, TLS, rotação, auditoria, lifecycle de órfãos, rate limit.
 - **Runtime (você):** confirmar conectividade/credenciais contra o MinIO gerenciado; em prod criar a tabela `documento` (em `%dev` o drop-and-create cuida).
