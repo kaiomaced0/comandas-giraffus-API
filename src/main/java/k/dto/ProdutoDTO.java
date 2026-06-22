@@ -10,7 +10,8 @@ public record ProdutoDTO(
         @NotBlank Double custo,
         @NotBlank Double valor,
         @NotBlank Integer estoque,
-        @NotBlank Long idTipoProduto) {
+        @NotBlank Long idTipoProduto,
+        Long imagemDocumentoId) {
     public static Produto criaProduto(ProdutoDTO produtoDTO) {
         Produto p = new Produto();
         p.setNome(produtoDTO.nome);
@@ -19,6 +20,7 @@ public record ProdutoDTO(
         p.setValorCompra(produtoDTO.custo());
         p.setValorVenda(produtoDTO.valor());
         p.setEstoque(produtoDTO.estoque);
+        p.setImagemDocumentoId(produtoDTO.imagemDocumentoId());
 
         return p;
     }

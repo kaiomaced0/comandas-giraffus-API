@@ -120,6 +120,9 @@ public class ProdutoServiceImpl implements ProdutoService {
                 if(produtoDTO.estoque() != null){
                     p.setEstoque(produtoDTO.estoque());
                 }
+                if(produtoDTO.imagemDocumentoId() != null){
+                    p.setImagemDocumentoId(produtoDTO.imagemDocumentoId());
+                }
                 TipoProduto t = new TipoProduto();
                 t = tipoProdutoRepository.findById(produtoDTO.idTipoProduto());
                 if(t != null){

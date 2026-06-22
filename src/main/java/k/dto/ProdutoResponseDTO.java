@@ -9,7 +9,8 @@ public record ProdutoResponseDTO(
         String linkimage,
         Double custo,
         Double valor,
-        Integer estoque) {
+        Integer estoque,
+        Long imagemDocumentoId) {
 
     public ProdutoResponseDTO(Produto produto) {
         this(produto.getId(),
@@ -18,7 +19,8 @@ public record ProdutoResponseDTO(
                 produto.getLinkimage(),
                 produto.getValorCompra(),
                 produto.getValorVenda(),
-                produto.getEstoque());
+                produto.getEstoque(),
+                produto.getImagemDocumentoId());
     }
 
 }

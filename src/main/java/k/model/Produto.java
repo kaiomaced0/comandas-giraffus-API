@@ -25,6 +25,8 @@ public class Produto extends EntityClass {
 
     private String linkimage;
 
+    private Long imagemDocumentoId;
+
     @ManyToOne
     @JoinColumn(name = "tipoproduto_produto")
     private TipoProduto tipoProduto;
@@ -35,6 +37,14 @@ public class Produto extends EntityClass {
 
     public void setLinkimage(String linkimage) {
         this.linkimage = linkimage;
+    }
+
+    public Long getImagemDocumentoId() {
+        return imagemDocumentoId;
+    }
+
+    public void setImagemDocumentoId(Long imagemDocumentoId) {
+        this.imagemDocumentoId = imagemDocumentoId;
     }
 
     public String getDescricao() {
